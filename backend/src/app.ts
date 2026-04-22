@@ -4,27 +4,26 @@ import { cors } from "hono/cors";
 
 type honoHandler = (data: Context) => Context;
 
-const serveFeedInfo: honoHandler = async(c) => {
+const serveFeedInfo: honoHandler = async (c) => {
   const readit = c.get("readit");
   const data = await readit.getPosts();
-  console.log(data)
+  data.posts.reverse();
   return c.json(data);
 };
 
-const serveAddFeedInfo:honoHandler = async(c) => {
+const serveAddFeedInfo: honoHandler = async (c) => {
   const readit = c.get("readit");
   const body = await c.req.json();
   const data = readit.addPosts(body);
   return c.json(data);
-}
+};
 
-const serveDeleteFeedInfo:honoHandler = async(c) => {
+const serveDeleteFeedInfo: honoHandler = async (c) => {
   const readit = c.get("readit");
-  const  id  = await c.req.json();
-  console.log(id)
-  const data = readit.deletePosts(id);
+  const _id = await c.req.json();
+  const data = readit.deletePosts(_id);
   return c.json(data);
-}
+};
 
 export const CreateApp = (data) => {
   const app = new Hono();

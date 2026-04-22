@@ -1,7 +1,6 @@
 export default class Readit {
   #nextId;
   #posts;
-
   constructor(posts, nextId = 1) {
     this.#posts = posts;
     this.#nextId = nextId;
@@ -17,8 +16,9 @@ export default class Readit {
     await this.#posts.insertOne(data);
     return { status: "succes" };
   }
-  async deletePosts(id) {
-    await this.#posts.deleteOne({ id });
+  async deletePosts(_id) {
+    const data = await this.#posts.deleteOne({_id});
+    console.log(data);
     return { status: "success" };
   }
 }
