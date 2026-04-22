@@ -4,9 +4,10 @@ import { cors } from "hono/cors";
 
 type honoHandler = (data: Context) => Context;
 
-const serveFeedInfo: honoHandler = (c) => {
+const serveFeedInfo: honoHandler = async(c) => {
   const readit = c.get("readit");
-  const data = readit.getPosts();
+  const data = await readit.getPosts();
+  console.log(data)
   return c.json(data);
 };
 
