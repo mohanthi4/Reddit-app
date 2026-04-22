@@ -10,4 +10,10 @@ export default class Readit {
   getPosts() {
     return { feed: this.#posts, nextId: this.#nextId };
   }
+
+  addPosts(data) {
+    data.id=this.#nextId++
+    this.#posts.unshift(data);
+    return {status:"succes"}
+  }
 }

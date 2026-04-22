@@ -10,7 +10,7 @@ const initialInfo = {
 };
   
 const main = () => {
-  const data = new Readit(initialInfo,2);
+  const data = new Readit(initialInfo,2 );
   const app = CreateApp(data);
   Deno.serve({port:8080},app.fetch)
 }
