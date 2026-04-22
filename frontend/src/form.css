@@ -1,0 +1,14 @@
+/* *{
+  font-family: sans-serif;
+  margin: 0px;
+  padding:0px;
+} */
+
+.formData{
+  border:1px solid #777;
+  border-radius: 2px;
+  margin: 20px;
+  padding:20px;
+  display: flex;
+  flex-direction: column;
+}
