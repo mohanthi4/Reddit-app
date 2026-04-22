@@ -1,59 +1,52 @@
-import { useReducer} from "react";
+import { useReducer } from "react";
 import "./form.css";
-import { produce } from "immer";
+import { formReducer, type FeedData, type PostData } from "./from-reducer";
 
 type FeedProps = {
   data: FeedData;
+  onDelete: (id: number ) => void;
 };
 
-const Feed = ({ data }: FeedProps) => {
+const Feed = ({ data, onDelete }: FeedProps) => {
   return (
-    <div className="feed">
+    <div className="feed posts">
       <h1>Feed</h1>
       {data.feed.map((f) => (
-        <article key={f.id}>
+        <article key={f.id} className="feed-article">
           <h3>{f.user}</h3>
           <p className="date">{f.date.toString()}</p>
           <div className="PostData">
             <h2>{f.title}</h2>
             <p>{f.description}</p>
           </div>
+          <button className="button-action" onClick={() => onDelete(f.id)}>
+            Delete
+          </button>
         </article>
       ))}
-
-      <button>Delete</button>
     </div>
   );
 };
 
-type PostData = {
-  id?: number;
-  user: string;
-  date: string;
-  title: string | undefined;
-  description: string | undefined;
+type AddFeed = {
+  addPost: (content: PostData) => void;
 };
 
-type FormAction = {
-  action: (content: PostData) => void;
-};
-
-const Form = ({ action }: FormAction) => {
+const Form = ({ addPost }: AddFeed) => {
   const handlePost = (e) => {
     e.preventDefault();
-
     const user = "alex";
     const formData = new FormData(e.target);
     const title = formData.get("title")?.toString();
     const description = formData.get("description")?.toString();
     const date = new Date().toString();
     const feed = { user, title, description, date };
-    action(feed);
+    addPost(feed);
   };
 
   return (
     <>
-      <div className="formData">
+      <div className="formData posts">
         <h1>Create Post</h1>
         <form onSubmit={handlePost}>
           <label>Title</label>
@@ -70,31 +63,6 @@ const Form = ({ action }: FormAction) => {
   );
 };
 
-type ReducerData = { type: "update-feed"; content: PostData };
-
-type FormReducer = (data: FeedData, action: ReducerData) => FeedData;
-
-const formReducer: FormReducer = (feedData, action) => {
-  action.content.id = feedData.nextId++;
-  console.log(feedData);
-  switch (action.type) {
-    case "update-feed": {
-      return produce(feedData, (draft) => {
-        console.log(draft)
-        draft.feed.unshift({
-          id: draft.nextId++,
-          user: action.content.user,
-          date:action.content.date,
-          title: action.content.title,
-          description:action.content.description
-        });
-      });
-    }
-  }
-};
-
-type FeedData = { nextId: number; feed: PostData[] };
-
 const App = () => {
   const initialInfo: PostData = {
     id: 1,
@@ -103,6 +71,7 @@ const App = () => {
     title: "First post",
     description: "welcome to new post",
   };
+
   const [feedData, dispatch] = useReducer(formReducer, {
     nextId: 2,
     feed: [initialInfo],
@@ -111,10 +80,16 @@ const App = () => {
   const handleUpdateFeed = (content: PostData) => {
     dispatch({ type: "update-feed", content });
   };
+
+  const handleDeleteFeed = (id: number) => {
+    console.log(id)
+    dispatch({ type: "delete-feed", content:id-1 });
+  };
+
   return (
     <>
-      <Form action={handleUpdateFeed} />
-      <Feed data={feedData} />
+      <Form addPost={handleUpdateFeed} />
+      <Feed data={feedData} onDelete={handleDeleteFeed} />
     </>
   );
 };

@@ -4,11 +4,18 @@
   padding:0px;
 } */
 
-.formData{
+
+.posts{
   border:1px solid #777;
   border-radius: 2px;
   margin: 20px;
   padding:20px;
-  display: flex;
-  flex-direction: column;
+}
+
+.feed-article{
+  border-bottom: 1px solid #777;
+}
+
+.button-action{
+  margin:10px;
 }
