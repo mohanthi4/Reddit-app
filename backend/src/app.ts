@@ -17,6 +17,14 @@ const serveAddFeedInfo:honoHandler = async(c) => {
   return c.json(data);
 }
 
+const serveDeleteFeedInfo:honoHandler = async(c) => {
+  const readit = c.get("readit");
+  const  id  = await c.req.json();
+  console.log(id)
+  const data = readit.deletePosts(id);
+  return c.json(data);
+}
+
 export const CreateApp = (data) => {
   const app = new Hono();
 
@@ -27,6 +35,7 @@ export const CreateApp = (data) => {
     await next();
   });
   app.get("/get/feedInfo", serveFeedInfo);
-  app.post("/post/feedInfo",serveAddFeedInfo)
+  app.post("/post/feedInfo", serveAddFeedInfo);
+  app.post("/post/deleteFeed", serveDeleteFeedInfo);
   return app;
 };
