@@ -10,7 +10,8 @@ export type PostData = {
 
 export type ReducerData =
   | { type: "update-feed"; content: PostData }
-  | { type: "delete-feed"; content: number };
+  | { type: "delete-feed"; content: number }
+  | { type: "display-feed" };
 
 export type FeedData = { nextId: number; feed: PostData[] };
 
@@ -24,20 +25,23 @@ export const formReducer: FormReducer = (feedData, action) => {
     case "update-feed": {
       return produce(feedData, (draft) => {
         draft.feed.unshift({
+          ...action.content,
           id: draft.nextId++,
-          user: action.content.user,
-          date: action.content.date,
-          title: action.content.title,
-          description: action.content.description,
         });
       });
     }
 
     case "delete-feed": {
       return produce(feedData, (draft) => {
-        const feedIndex= draft.feed.findIndex(feed=>feed.id === action.content)
+        const feedIndex = draft.feed.findIndex(
+          (feed) => feed.id === action.content,
+        );
         draft.feed.splice(feedIndex, 1);
       });
+    }
+
+    case "display-feed": {
+      return produce(feedData, (draft) => action.content);
     }
   }
 };

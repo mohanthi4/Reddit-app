@@ -1,10 +1,41 @@
-import { useReducer } from "react";
+import { useReducer, useEffect } from "react";
 import "./form.css";
 import { formReducer, type FeedData, type PostData } from "./from-reducer";
 
 type FeedProps = {
   data: FeedData;
-  onDelete: (id: number ) => void;
+  onDelete: (id: number) => void;
+};
+
+const PostArticle = ({ id, user, date, title, description, onDelete }) => {
+  const handleDeleteFeed = (e, id) => {
+    fetch("http://localhost:8080/post/deleteFeed", {
+      method: "post",
+      body: JSON.stringify(id),
+    })
+      .then((x) => x.json())
+      .catch((e) => console.log(e));
+    onDelete(id);
+  };
+
+  return (
+    <article key={id} className="feed-article">
+      <h3>{user}</h3>
+      <p className="date">{date}</p>
+      <div className="PostData">
+        <h2>{title}</h2>
+        <p>{description}</p>
+      </div>
+      <button
+        className="button-action"
+        onClick={(e) => {
+          handleDeleteFeed(e, id);
+        }}
+      >
+        Delete
+      </button>
+    </article>
+  );
 };
 
 const Feed = ({ data, onDelete }: FeedProps) => {
@@ -12,17 +43,15 @@ const Feed = ({ data, onDelete }: FeedProps) => {
     <div className="feed posts">
       <h1>Feed</h1>
       {data.feed.map((f) => (
-        <article key={f.id} className="feed-article">
-          <h3>{f.user}</h3>
-          <p className="date">{f.date.toString()}</p>
-          <div className="PostData">
-            <h2>{f.title}</h2>
-            <p>{f.description}</p>
-          </div>
-          <button className="button-action" onClick={() => onDelete(f.id)}>
-            Delete
-          </button>
-        </article>
+        <PostArticle
+          key={f.id}
+          id={f.id}
+          user={f.user}
+          date={f.date.toString()}
+          description={f.description}
+          title={f.title}
+          onDelete={onDelete}
+        />
       ))}
     </div>
   );
@@ -41,6 +70,12 @@ const Form = ({ addPost }: AddFeed) => {
     const description = formData.get("description")?.toString();
     const date = new Date().toString();
     const feed = { user, title, description, date };
+    fetch("http://localhost:8080/post/feedInfo", {
+      method: "post",
+      body: JSON.stringify(feed),
+    })
+      .then((x) => x.json())
+      .catch((e) => console.log(e));
     addPost(feed);
   };
 
@@ -64,26 +99,25 @@ const Form = ({ addPost }: AddFeed) => {
 };
 
 const App = () => {
-  const initialInfo: PostData = {
-    id: 1,
-    user: "alex",
-    date: new Date().toString(),
-    title: "First post",
-    description: "welcome to new post",
-  };
-
   const [feedData, dispatch] = useReducer(formReducer, {
-    nextId: 2,
-    feed: [initialInfo],
+    nextId: 1,
+    feed: [],
   });
+
+  useEffect(() => {
+    fetch("http://localhost:8080/get/feedInfo")
+      .then((x) => x.json())
+      .then((x) => {
+        dispatch({ type: "display-feed", content: x });
+      });
+  }, []);
 
   const handleUpdateFeed = (content: PostData) => {
     dispatch({ type: "update-feed", content });
   };
 
   const handleDeleteFeed = (id: number) => {
-    console.log(id,feedData)
-    dispatch({ type: "delete-feed", content:id });
+    dispatch({ type: "delete-feed", content: id });
   };
 
   return (
