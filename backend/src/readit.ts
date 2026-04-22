@@ -2,12 +2,12 @@ export default class Readit {
   #nextId;
   #posts;
 
-  constructor(posts={},nextId=1) {
+  constructor(posts = {}, nextId = 1) {
     this.#posts = [posts];
     this.#nextId = nextId;
   }
 
   getPosts() {
-    return this.#posts;
+    return { feed: this.#posts, nextId: this.#nextId };
   }
 }
