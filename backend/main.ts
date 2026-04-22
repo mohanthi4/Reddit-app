@@ -22,7 +22,7 @@ const CreateClient = async () => {
   const client = new MongoClient("mongodb://127.0.0.1:27017");
   await client.connect();
   const db = client.db("readit");
-  const postData = db.collection<PostsSchema>("posts");
+  const postData = db.collection<PostsSchema>("Alex-posts");
   const data = await postData.find({}).toArray();
   // console.log(data);
   // await postData.insertOne(initialInfo);

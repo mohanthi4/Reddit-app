@@ -8,24 +8,17 @@ export default class Readit {
   }
 
   async getPosts() {
-    // return { posts: this.#posts, nextId: this.#nextId };
     const data = await this.#posts.find({}).toArray();
-    // console.log(data);
     return { posts: data, nextId: this.#nextId };
   }
 
-  addPosts(data) {
-    data.id = this.#nextId++;
-    this.#posts.unshift(data);
+  async addPosts(data) {
+    data._id = this.#nextId++;
+    await this.#posts.insertOne(data);
     return { status: "succes" };
   }
-  deletePosts(id) {
-    console.log(this.#posts);
-    const feedIndex = this.#posts.findIndex(
-      (feed) => feed.id === id,
-    );
-    this.#posts.splice(feedIndex, 1);
-    console.log(this.#posts);
+  async deletePosts(id) {
+    await this.#posts.deleteOne({ id });
     return { status: "success" };
   }
 }
