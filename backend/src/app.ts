@@ -35,7 +35,7 @@ export const CreateApp = (data) => {
     await next();
   });
   app.get("/get/feedInfo", serveFeedInfo);
-  app.post("/post/feedInfo", serveAddFeedInfo);
-  app.post("/post/deleteFeed", serveDeleteFeedInfo);
+  app.post("/post/addPost", serveAddFeedInfo);
+  app.post("/post/deletePost", serveDeleteFeedInfo);
   return app;
 };

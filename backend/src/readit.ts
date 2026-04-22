@@ -8,7 +8,7 @@ export default class Readit {
   }
 
   getPosts() {
-    return { feed: this.#posts, nextId: this.#nextId };
+    return { posts: this.#posts, nextId: this.#nextId };
   }
 
   addPosts(data) {

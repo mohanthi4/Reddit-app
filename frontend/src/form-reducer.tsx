@@ -9,9 +9,9 @@ export type PostData = {
 };
 
 export type ReducerData =
-  | { type: "update-feed"; content: PostData }
-  | { type: "delete-feed"; content: number }
-  | { type: "display-feed" };
+  | { type: "update-posts"; content: PostData }
+  | { type: "delete-posts"; content: number }
+  | { type: "display-posts" };
 
 export type FeedData = { nextId: number; feed: PostData[] };
 
@@ -22,25 +22,25 @@ export type FormReducer = (
 
 export const formReducer: FormReducer = (feedData, action) => {
   switch (action.type) {
-    case "update-feed": {
+    case "update-posts": {
       return produce(feedData, (draft) => {
-        draft.feed.unshift({
+        draft.posts.unshift({
           ...action.content,
           id: draft.nextId++,
         });
       });
     }
 
-    case "delete-feed": {
+    case "delete-posts": {
       return produce(feedData, (draft) => {
-        const feedIndex = draft.feed.findIndex(
-          (feed) => feed.id === action.content,
+        const feedIndex = draft.posts.findIndex(
+          (post) => post.id === action.content,
         );
-        draft.feed.splice(feedIndex, 1);
+        draft.posts.splice(feedIndex, 1);
       });
     }
 
-    case "display-feed": {
+    case "display-posts": {
       return produce(feedData, (draft) => action.content);
     }
   }
