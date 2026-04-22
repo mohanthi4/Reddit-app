@@ -82,7 +82,7 @@ const App = () => {
   };
 
   const handleDeleteFeed = (id: number) => {
-    console.log(id)
+    console.log(id,feedData)
     dispatch({ type: "delete-feed", content:id-1 });
   };
 

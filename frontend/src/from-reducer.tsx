@@ -35,7 +35,8 @@ export const formReducer: FormReducer = (feedData, action) => {
 
     case "delete-feed": {
       return produce(feedData, (draft) => {
-        draft.feed.splice(action.content, 1);
+        const feedIndex= draft.feed.findIndex(feed=>feed.id === action.content)
+        draft.feed.splice(feedIndex, 1);
       });
     }
   }
