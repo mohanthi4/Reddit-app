@@ -83,7 +83,7 @@ const App = () => {
 
   const handleDeleteFeed = (id: number) => {
     console.log(id,feedData)
-    dispatch({ type: "delete-feed", content:id-1 });
+    dispatch({ type: "delete-feed", content:id });
   };
 
   return (

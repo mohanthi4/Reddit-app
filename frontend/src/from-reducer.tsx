@@ -23,7 +23,7 @@ export const formReducer: FormReducer = (feedData, action) => {
   switch (action.type) {
     case "update-feed": {
       return produce(feedData, (draft) => {
-        draft.feed.push({
+        draft.feed.unshift({
           id: draft.nextId++,
           user: action.content.user,
           date: action.content.date,
