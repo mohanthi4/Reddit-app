@@ -11,14 +11,13 @@ export default class Readit {
     return { posts: data, nextId: this.#nextId };
   }
 
-  async addPosts(data) {
+  async addPost(data) {
     data._id = this.#nextId++;
     await this.#posts.insertOne(data);
     return { status: "succes" };
   }
-  async deletePosts(_id) {
-    const data = await this.#posts.deleteOne({_id});
-    console.log(data);
+  async deletePost(_id:number) {
+    const data = await this.#posts.deleteOne({ _id });
     return { status: "success" };
   }
 }
