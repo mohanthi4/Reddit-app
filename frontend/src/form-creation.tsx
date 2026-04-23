@@ -7,7 +7,8 @@ type AddPosts = {
 };
 
 const getPostInfo = (e, userName) => {
-  const user = userName.user;
+  console.log(userName,"name")
+  const user = userName;
   const formData = new FormData(e.target);
   const title = formData.get("title")?.toString();
   const description = formData.get("description")?.toString();
@@ -17,10 +18,10 @@ const getPostInfo = (e, userName) => {
 
 export const FormCreation = ({ addPost }: AddPosts) => {
   const userName = useContext(UserContext);
-  console.log(userName)
   const handleAddPost = (e) => {
     e.preventDefault();
     const posts = getPostInfo(e, userName);
+    console.log(posts,"data to add")
     fetch("http://localhost:8080/post/addPost", {
       method: "post",
       body: JSON.stringify(posts),

@@ -16,9 +16,6 @@ export default class Readit {
 
   async getPosts(Id) {
     const data = await this.#posts.find({ userId: +Id }).toArray();
-    const data1 = await this.#posts.find({}).toArray();
-    console.log(data1,"all")
-    console.log(data,"posts",Id)
     return { posts: data, nextId: this.#nextId };
   }
 
