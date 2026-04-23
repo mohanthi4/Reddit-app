@@ -9,13 +9,21 @@ export default class User {
   async addUser(userInfo) {
     userInfo._id = this.#nextId++;
     await this.#users.insertOne(userInfo);
-    const user = userInfo.user
-    const id = userInfo._id
-    return { status: true, user,id};
+    const user = userInfo.user;
+    const id = userInfo._id;
+    return { status: true, user, id };
   }
 
   async getUserName(Id) {
     const data = await this.#users.find({ _id: +Id }).toArray();
-    return data[0].user
+    return data[0].user;
+  }
+  async getAllUsers(Id) {
+    const data = await this.#users.find({ _id: { "$ne": +Id } }).toArray();
+    return data;
+  }
+  async userSubcribres(Id) {
+    const data = await this.#users.find({ _id: +Id }).toArray();
+    return data[0].subscribers;
   }
 }

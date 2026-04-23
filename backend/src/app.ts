@@ -8,6 +8,7 @@ import {
   serveDeletePost,
   serveFeedInfo,
   serveLoginUser,
+  serveSubcribers,
 } from "./handlers.ts";
 import User from "./user.ts";
 
@@ -23,6 +24,7 @@ export const CreateApp = (userData: User, postData: Readit) => {
   });
   app.get("/get/feedInfo", serveFeedInfo);
   app.get("/get/checkUser", serveCheckUser);
+  app.get("/get/subscribers",serveSubcribers)
   app.post("/post/loginUser", serveLoginUser);
   app.post("/post/addPost", serveAddPost);
   app.post("/post/deletePost", serveDeletePost);

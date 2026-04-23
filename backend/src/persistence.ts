@@ -12,14 +12,15 @@ interface UsersSchema {
   _id: number;
   user: string;
   password: string | number;
+  subscribers: number[];
 }
 
 export const createClient = async () => {
   const client = new MongoClient("mongodb://127.0.0.1:27017");
   await client.connect();
   const db = client.db("readit");
-  const userData = db.collection<PostsSchema>("users-info");
-  const postData = db.collection<UsersSchema>("posts-info");
+  const userData = db.collection<PostsSchema>("users-data");
+  const postData = db.collection<UsersSchema>("feed-info");
   const postLength = await postData.find({}).toArray().then((data) => {
     if (data.length === 0) {
       return 1;

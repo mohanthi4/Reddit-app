@@ -18,6 +18,10 @@ body{
 
 }
 
+.list{
+height:50px;
+}
+
 .search{
   display: flex;
   flex-direction: row;

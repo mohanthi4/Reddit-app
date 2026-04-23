@@ -21,9 +21,9 @@ export const serveAddPost: honoHandler = async (c) => {
   const readit = c.get("postsClass");
   const user_id = getCookie(c, "user_id");
   const userId = parseInt(user_id);
-  const {title,description,date} = await c.req.json();
+  const { title, description, date } = await c.req.json();
   const finalData = { title, description, date, userId };
-  console.log(finalData)
+  console.log(finalData);
   const data = await readit.addPost(finalData);
   return c.json(data);
 };
@@ -53,3 +53,28 @@ export const serveLoginUser = async (c) => {
   setCookie(c, "user_id", id);
   return c.json({ status, user });
 };
+
+const getUsersValidData = (users,subscribers) => {
+  return users.map((user) => {
+    const creator = user;
+    creator.isSubscribe = subscribers.includes(user._id);
+    return {
+      id: creator._id,
+      user: creator.user,
+      isSubscribe: creator.isSubscribe,
+    };
+  });
+}
+
+export const serveSubcribers = async (c) => {
+  const user_id = getCookie(c, "user_id");
+  const userId = parseInt(user_id);
+  // const userId = 1;
+  const users = c.get("usersClass");
+  const allUsers = await users.getAllUsers(userId);
+  const subscribers = await users.userSubcribres(userId);
+  const finalData = getUsersValidData(allUsers,subscribers)
+  return c.json(finalData);
+};
+
+
