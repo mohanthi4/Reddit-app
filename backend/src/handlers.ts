@@ -28,8 +28,10 @@ export const serveAddPost: honoHandler = async (c) => {
   const readit = c.get("postsClass");
   const user_id = getCookie(c, "user_id");
   const userId = parseInt(user_id);
+  console.log(user_id)
   const {title,description,date} = await c.req.json();
-  const finalData = {title,description,date,userId};
+  const finalData = { title, description, date, userId };
+  console.log(finalData)
   const data = await readit.addPost(finalData);
   return c.json(data);
 };
