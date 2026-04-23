@@ -2,9 +2,9 @@ import { useReducer, useState, useEffect } from "react";
 import { createContext, useContext } from "react";
 import "./form.css";
 import { formReducer, type PostData } from "./reducers/form-reducer.tsx";
+import { LoginReducer } from "./reducers/login-reducer.tsx";
 import { Feed } from "./feed.tsx";
 import { FormCreation } from "./form-creation.tsx";
-import { produce } from "immer";
 
 const Home = () => {
   const [feedData, dispatch] = useReducer(formReducer, {
@@ -36,11 +36,25 @@ const Home = () => {
   );
 };
 
-const Login = ({ setLogin }) => {
+const Login = ({ handleUsersLogin }) => {
   const handleLogin = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const user = formData.get("user")?.toString();
+    const password = formData.get("password")?.toString();
+    const body = { user, password };
+    fetch("http://localhost:8080/post/loginUser", {
+      method: "post",
+      body: JSON.stringify(body),
+      credentials: "include",
+    })
+      .then((x) => x.json())
+      .then((user) => {
+        console.log(user)
+        handleUsersLogin(user)
+      })
+      .catch((e) => console.log(e));
+
     // setLogin({ status: true, user: { user } });
   };
 
@@ -58,31 +72,31 @@ const Login = ({ setLogin }) => {
   );
 };
 
-const LoginReducer = (loginInfo, action) => {
-  switch (action.type) {
-    case "init-user": {
-      return produce(loginInfo, (draft) => action.content);
-    }
-  }
+type LoginInfo = {
+  status: boolean;
+  user: string;
 };
 
 export const UserContext = createContext(null);
 
 const App = () => {
-  // const [loginInfo, setLogin] = useState({ status: false, user: "" });
-
   const [loginInfo, dispatch] = useReducer(LoginReducer, {
     status: false,
     user: "",
   });
 
   useEffect(() => {
-    fetch("http://localhost:8080/get/checkUser")
+    fetch("http://localhost:8080/get/checkUser",{credentials:"include"})
       .then((data) => data.json())
       .then((data) => {
+        console.log(data,"in check")
         dispatch({ type: "init-user", content: data });
       });
   }, []);
+
+  const handleUsersLogin = (content: string) => {
+    dispatch({ type: "user-login", content });
+  };
   return (
     <>
       {loginInfo.status ? (
@@ -90,7 +104,7 @@ const App = () => {
           <Home />
         </UserContext>
       ) : (
-        <Login setLogin={dispatch} />
+        <Login handleUsersLogin={handleUsersLogin} />
       )}
     </>
   );

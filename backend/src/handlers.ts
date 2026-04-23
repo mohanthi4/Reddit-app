@@ -30,5 +30,16 @@ export const serveCheckUser = (c) => {
     ? { status: true, user: "Alex" }
     : { status: false, user: "" };
 
+  console.log(status,user,userId,"sent after")
+  return c.json({ status, user });
+};
+
+export const serveLoginUser = async (c) => {
+  const users = c.get("usersClass");
+  const body = await c.req.json();
+  const { status, user,id } = await users.addUser(body);
+  setCookie(c, "user_id", id);
+  const userId = getCookie(c, "user_id");
+  console.log(userId,"cookie")
   return c.json({ status, user });
 };

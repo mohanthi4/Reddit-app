@@ -6,5 +6,11 @@ export default class User {
     this.#nextId = nextId;
   }
 
-  
+  async addUser(userInfo) {
+    userInfo._id = this.#nextId++;
+    await this.#users.insertOne(userInfo);
+    const user = userInfo.user
+    const id = userInfo._id
+    return { status: true, user,id};
+  }
 }
