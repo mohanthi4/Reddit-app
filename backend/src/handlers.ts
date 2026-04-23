@@ -1,4 +1,5 @@
 import { Context } from "hono";
+import { getCookie, setCookie } from "hono/cookie";
 
 type honoHandler = (data: Context) => Promise<Response>;
 
@@ -21,4 +22,13 @@ export const serveDeletePost: honoHandler = async (c) => {
   const _id = await c.req.json();
   const data = readit.deletePost(_id);
   return c.json(data);
+};
+
+export const serveCheckUser = (c) => {
+  const userId = getCookie(c, "user_id");
+  const { status, user } = userId
+    ? { status: true, user: "Alex" }
+    : { status: false, user: "" };
+
+  return c.json({ status, user });
 };

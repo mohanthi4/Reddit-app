@@ -1,4 +1,4 @@
-import { formReducer, type FeedData, type PostData } from "./form-reducer.tsx";
+import { formReducer, type FeedData, type PostData } from "./reducers/form-reducer.tsx";
 
 const PostArticle = ({ id, user, date, title, description, deletePost }) => {
   const handleDeletePost = (e, id) => {

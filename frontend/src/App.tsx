@@ -1,9 +1,10 @@
-import { useReducer,useState, useEffect } from "react";
+import { useReducer, useState, useEffect } from "react";
 import { createContext, useContext } from "react";
 import "./form.css";
-import { formReducer, type PostData } from "./form-reducer.tsx";
+import { formReducer, type PostData } from "./reducers/form-reducer.tsx";
 import { Feed } from "./feed.tsx";
 import { FormCreation } from "./form-creation.tsx";
+import { produce } from "immer";
 
 const Home = () => {
   const [feedData, dispatch] = useReducer(formReducer, {
@@ -40,7 +41,7 @@ const Login = ({ setLogin }) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const user = formData.get("user")?.toString();
-    setLogin({status:true,user:{user}});
+    // setLogin({ status: true, user: { user } });
   };
 
   return (
@@ -57,16 +58,42 @@ const Login = ({ setLogin }) => {
   );
 };
 
-export const UserContext = createContext(null)
+const LoginReducer = (loginInfo, action) => {
+  switch (action.type) {
+    case "init-user": {
+      return produce(loginInfo, (draft) => action.content);
+    }
+  }
+};
+
+export const UserContext = createContext(null);
 
 const App = () => {
-  const [loginInfo, setLogin] = useState({ status: false, user: "" });
-  //  const { theme, setTheme } = useContext(ThemeContext);
-  return <>
-    {loginInfo.status
-      ? <UserContext value={loginInfo.user}><Home /></UserContext >
-      : <Login setLogin={setLogin}  />}
-  </>;
+  // const [loginInfo, setLogin] = useState({ status: false, user: "" });
+
+  const [loginInfo, dispatch] = useReducer(LoginReducer, {
+    status: false,
+    user: "",
+  });
+
+  useEffect(() => {
+    fetch("http://localhost:8080/get/checkUser")
+      .then((data) => data.json())
+      .then((data) => {
+        dispatch({ type: "init-user", content: data });
+      });
+  }, []);
+  return (
+    <>
+      {loginInfo.status ? (
+        <UserContext value={loginInfo.user}>
+          <Home />
+        </UserContext>
+      ) : (
+        <Login setLogin={dispatch} />
+      )}
+    </>
+  );
 };
 
 export default App;
