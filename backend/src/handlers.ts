@@ -5,10 +5,9 @@ type honoHandler = (data: Context) => Promise<Response>;
 export const serveFeedInfo: honoHandler = async (c) => {
   const readit = c.get("postsClass");
   const data = await readit.getPosts();
-  data.posts.reverse()
+  data.posts.reverse();
   return c.json(data);
 };
-
 
 export const serveAddPost: honoHandler = async (c) => {
   const readit = c.get("postsClass");

@@ -12,6 +12,6 @@ describe("Readit class", () => {
   });
   it("get all feed data", async () => {
     const data = await readit.getPosts();
-    assertEquals(data, "");
+    assertEquals(data, { posts: [], nextId: 1 });
   });
 });
