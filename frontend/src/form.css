@@ -18,8 +18,23 @@ body{
 
 }
 
+.search{
+  display: flex;
+  flex-direction: row;
+   width: 90vw;
+}
+
+.button-search{
+  background-color: rgb(64, 125, 210);
+  border-color: rgb(64, 125, 210);
+  color: white;
+  height:30px;
+  width:70px;
+}
+
 input{
   height:40px;
+  width:100%
 }
 
 textarea{

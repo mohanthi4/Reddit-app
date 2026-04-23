@@ -9,13 +9,6 @@ export const serveFeedInfo: honoHandler = async (c) => {
     const readit = c.get("postsClass");
     const users = c.get("usersClass");
     const userId = parseInt(user_id);
-    // const body = {
-    //   userId,
-    //   date: "12/3/2024",
-    //   title: "hello",
-    //   description: "welcome to our new site",
-    // };
-    // const d = await readit.addPost(body);
     const data = await readit.getPosts(userId);
     const userName = await users.getUserName(userId);
     data.posts.map((ele) => ele.user = userName);
@@ -28,7 +21,6 @@ export const serveAddPost: honoHandler = async (c) => {
   const readit = c.get("postsClass");
   const user_id = getCookie(c, "user_id");
   const userId = parseInt(user_id);
-  console.log(user_id)
   const {title,description,date} = await c.req.json();
   const finalData = { title, description, date, userId };
   console.log(finalData)
