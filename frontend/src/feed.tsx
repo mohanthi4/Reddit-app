@@ -15,7 +15,7 @@ const PostArticle = ({ id, user, date, title, description, deletePost }) => {
   return (
     <article className="posts-article">
       <h3>{user}</h3>
-      <p className="date">{date}</p>
+      <p className="date">{date.toString()}</p>
       <div className="PostData">
         <h2>{title}</h2>
         <p>{description}</p>
@@ -42,18 +42,18 @@ export const Feed = ({ data, deletePost }: FeedProps) => {
     <div className="feed posts">
       <h1>posts</h1>
       <div className="feedData">
-      {data.posts.map((f) => (
-        <PostArticle
-          key={f._id}
-          id={f._id}
-          user={f.user}
-          date={f.date.toString()}
-          description={f.description}
-          title={f.title}
-          deletePost={deletePost}
-        />
-      ))}
-        </div>
+        {data.posts.map((f) => (
+          <PostArticle
+            key={f._id}
+            id={f._id}
+            user={f.user}
+            date={f.date}
+            description={f.description}
+            title={f.title}
+            deletePost={deletePost}
+          />
+        ))}
+      </div>
     </div>
   );
 };

@@ -40,8 +40,7 @@ const Login = ({ setLogin }) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const user = formData.get("user")?.toString();
-    alert(user);
-    setLogin(true);
+    setLogin({status:true,user:{user}});
   };
 
   return (
@@ -58,9 +57,16 @@ const Login = ({ setLogin }) => {
   );
 };
 
+export const UserContext = createContext(null)
+
 const App = () => {
-  const [isLoggedIn, setLogin] = useState(false);
-  return <>{isLoggedIn ? <Home /> : <Login setLogin={setLogin} />}</>;
+  const [loginInfo, setLogin] = useState({ status: false, user: "" });
+  //  const { theme, setTheme } = useContext(ThemeContext);
+  return <>
+    {loginInfo.status
+      ? <UserContext value={loginInfo.user}><Home /></UserContext >
+      : <Login setLogin={setLogin}  />}
+  </>;
 };
 
 export default App;
