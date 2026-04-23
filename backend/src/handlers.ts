@@ -17,7 +17,8 @@ export const serveFeedInfo: honoHandler = async (c) => {
     };
     const d = await readit.addPost(body);
     const data = await readit.getPosts(userId);
-    console.log(data, "info");
+    const userName = await users.getUserName(userId);
+    data.posts.map(ele => ele.user =  userName)
     data.posts.reverse();
     return c.json(data);
   }
