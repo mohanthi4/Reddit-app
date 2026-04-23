@@ -1,5 +1,6 @@
 {
   "imports": {
-    "hono": "npm:hono@^4.12.14"
+    "hono": "npm:hono@^4.12.14",
+    "mongodb": "npm:mongodb@^7.2.0"
   }
 }

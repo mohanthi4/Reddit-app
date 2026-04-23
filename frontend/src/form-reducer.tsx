@@ -1,7 +1,7 @@
 import { produce } from "immer";
 
 export type PostData = {
-  id?: number;
+  _id?: number;
   user: string;
   date: string;
   title: string | undefined;
@@ -9,9 +9,9 @@ export type PostData = {
 };
 
 export type ReducerData =
-  | { type: "update-posts"; content: PostData }
-  | { type: "delete-posts"; content: number }
-  | { type: "display-posts" };
+  | { type: "add-post"; content: PostData }
+  | { type: "delete-post"; content: number }
+  | { type: "init-posts" };
 
 export type FeedData = { nextId: number; feed: PostData[] };
 
@@ -22,25 +22,22 @@ export type FormReducer = (
 
 export const formReducer: FormReducer = (feedData, action) => {
   switch (action.type) {
-    case "update-posts": {
+    case "add-post": {
       return produce(feedData, (draft) => {
-        draft.posts.unshift({
-          ...action.content,
-          id: draft.nextId++,
-        });
+        draft.posts.unshift({ ...action.content, _id: draft.nextId++ });
       });
     }
 
-    case "delete-posts": {
+    case "delete-post": {
       return produce(feedData, (draft) => {
         const feedIndex = draft.posts.findIndex(
-          (post) => post.id === action.content,
+          (post) => post._id === action.content,
         );
         draft.posts.splice(feedIndex, 1);
       });
     }
 
-    case "display-posts": {
+    case "init-posts": {
       return produce(feedData, (draft) => action.content);
     }
   }

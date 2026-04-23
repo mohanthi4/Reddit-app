@@ -1,15 +1,50 @@
-/* *{
-  font-family: sans-serif;
-  margin: 0px;
-  padding:0px;
-} */
 
+body{
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.form{
+  height:20vh;
+  width: 90vw;
+}
 
 .posts{
   border:1px solid #777;
   border-radius: 2px;
-  margin: 20px;
+  margin: 50px;
   padding:20px;
+
+}
+
+input{
+  height:40px;
+}
+
+textarea{
+  height:200px
+}
+
+.loginButton{
+  background-color: rgb(64, 125, 210);
+  border-color: rgb(64, 125, 210);
+  color: white;
+  height:30px;
+  width:50px;
+}
+
+.formData input,textarea,button{
+  width: 100%;
+  margin: 10px;
+}
+
+.formData button{
+  background-color: rgb(64, 125, 210);
+  border-color: rgb(64, 125, 210);
+  color: white;
+  height:30px;
+  width:70px;
 }
 
 .feed-article{
@@ -18,4 +53,14 @@
 
 .button-action{
   margin:10px;
+  width:60px;
+}
+
+.feedData{
+  border: 1px solid #888;
+  box-shadow: #777;
+  padding: 30px;
+}
+.posts-article{
+  border:
 }
