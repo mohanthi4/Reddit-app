@@ -13,4 +13,9 @@ export default class User {
     const id = userInfo._id
     return { status: true, user,id};
   }
+
+  async getUserName(Id) {
+    const data = await this.#users.find({ _id: +Id }).toArray();
+    return data[0].user
+  }
 }

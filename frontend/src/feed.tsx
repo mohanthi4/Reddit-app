@@ -1,4 +1,8 @@
-import { formReducer, type FeedData, type PostData } from "./reducers/form-reducer.tsx";
+import {
+  formReducer,
+  type FeedData,
+  type PostData,
+} from "./reducers/form-reducer.tsx";
 
 const PostArticle = ({ id, user, date, title, description, deletePost }) => {
   const handleDeletePost = (e, id) => {
@@ -38,21 +42,26 @@ type FeedProps = {
 };
 
 export const Feed = ({ data, deletePost }: FeedProps) => {
+  console.log(data,"feed")
   return (
     <div className="feed posts">
       <h1>posts</h1>
       <div className="feedData">
-        {data.posts.map((f) => (
-          <PostArticle
-            key={f._id}
-            id={f._id}
-            user={f.user}
-            date={f.date}
-            description={f.description}
-            title={f.title}
-            deletePost={deletePost}
-          />
-        ))}
+        {data.posts.length > 0 ? (
+          data.posts.map((f) => (
+            <PostArticle
+              key={f._id}
+              id={f._id}
+              user={f.user}
+              date={f.date}
+              description={f.description}
+              title={f.title}
+              deletePost={deletePost}
+            />
+          ))
+        ) : (
+          <p>No posts yet</p>
+        )}
       </div>
     </div>
   );

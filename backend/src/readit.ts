@@ -14,15 +14,19 @@ export default class Readit {
     this.#nextId = nextId;
   }
 
-  async getPosts() {
-    const data = await this.#posts.find({}).toArray();
+  async getPosts(Id) {
+    const data = await this.#posts.find({ userId: +Id }).toArray();
+    const data1 = await this.#posts.find({}).toArray();
+    console.log(data1,"all")
+    console.log(data,"posts",Id)
     return { posts: data, nextId: this.#nextId };
   }
 
   async addPost(data: PostData) {
     data._id = this.#nextId++;
     await this.#posts.insertOne(data);
-    return { status: "succes" };
+   console.log("adds")
+    return { status: "success" };
   }
   async deletePost(_id: number) {
     await this.#posts.deleteOne({ _id });

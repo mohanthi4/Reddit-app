@@ -2,7 +2,7 @@ import { MongoClient } from "mongodb";
 
 interface PostsSchema {
   _id: number;
-  user: string;
+  userId: number;
   date: string;
   title: string;
   description: string;
@@ -19,7 +19,7 @@ export const createClient = async () => {
   await client.connect();
   const db = client.db("readit");
   const userData = db.collection<PostsSchema>("users-info");
-  const postData = db.collection<UsersSchema>("users-posts");
+  const postData = db.collection<UsersSchema>("posts-info");
   const postLength = await postData.find({}).toArray().then((data) => {
     if (data.length === 0) {
       return 1;

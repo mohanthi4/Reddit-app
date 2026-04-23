@@ -17,6 +17,7 @@ const getPostInfo = (e, userName) => {
 
 export const FormCreation = ({ addPost }: AddPosts) => {
   const userName = useContext(UserContext);
+  console.log(userName)
   const handleAddPost = (e) => {
     e.preventDefault();
     const posts = getPostInfo(e, userName);
