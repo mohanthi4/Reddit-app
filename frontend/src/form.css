@@ -18,6 +18,31 @@ body{
 
 }
 
+.lists {
+  margin: 10px;
+  width: 500px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+    background: #fff;
+}
+
+.lists li {
+  display: flex;
+  align-items: center;
+  padding: 15px 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.green{
+  color:rgb(69, 205, 69);
+  border-color: rgb(69, 205, 69);
+}
+
+.blue{
+  color:rgb(43, 132, 233);
+  border-color:rgb(43, 132, 233) ;
+}
+
 .list{
 height:50px;
 }
@@ -80,6 +105,12 @@ textarea{
   box-shadow: #777;
   padding: 30px;
 }
-.posts-article{
-  border:
+
+.my-user{
+  margin-left: 50px;
+  font-size: 14px;
+  font-weight: 100;
+  border:1px solid rgb(82, 235, 82);
+  padding:6px;
+  color:rgb(19, 148, 19);
 }

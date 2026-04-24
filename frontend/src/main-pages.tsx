@@ -2,20 +2,13 @@ import { Feed } from "./feed.tsx";
 import { FormCreation } from "./form-creation.tsx";
 import { formReducer, type PostData } from "./reducers/form-reducer.tsx";
 import { useReducer, useState, useEffect } from "react";
+import { SearchLabel } from "./search-label.tsx";
 
 export const Home = () => {
   const [feedData, dispatch] = useReducer(formReducer, {
     nextId: 1,
     posts: [],
   });
-
-  useEffect(() => {
-    fetch("http://localhost:8080/get/feedInfo", { credentials: "include" })
-      .then((data) => data.json())
-      .then((data) => {
-        dispatch({ type: "init-posts", content: data });
-      });
-  }, []);
 
   const handleAddPost = (content: PostData) => {
     dispatch({ type: "add-post", content });
@@ -25,8 +18,55 @@ export const Home = () => {
     dispatch({ type: "delete-post", content: id });
   };
 
+  // useEffect(() => {
+  //   fetch("http://localhost:8080/get/feedInfo", { credentials: "include" })
+  //     .then((data) => data.json())
+  //     .then((data) => {
+  //       dispatch({ type: "init-posts", content: data });
+  //     });
+  // }, []);
+
+  // const feedData = {
+  //   nextId: 5,
+  //   posts: [
+  //     {
+  //       _id: 1,
+  //       userId: 1,
+  //       user: "John",
+  //       title: "hi",
+  //       description: "welcome to new",
+  //       date: "20/12/2024",
+  //     },
+  //     {
+  //       _id: 2,
+  //       userId: 2,
+  //       user: "Alex",
+  //       title: "Well",
+  //       description: "welcome to old",
+  //       date: "20/11/2024",
+  //     },
+  //     {
+  //       _id: 3,
+  //       userId: 3,
+  //       user: "Ram",
+  //       title: "super",
+  //       description: "wow",
+  //       date: "20/10/2024",
+  //     },
+  //     {
+  //       _id: 4,
+  //       userId: 1,
+  //       user: "John",
+  //       title: "yay",
+  //       description: "it works...",
+  //       date: "20/09/2024",
+  //     },
+  //   ],
+  // };
+
   return (
     <div className="form">
+      <SearchLabel />
       <FormCreation addPost={handleAddPost} />
       <Feed data={feedData} deletePost={handleDeletePost} />
     </div>

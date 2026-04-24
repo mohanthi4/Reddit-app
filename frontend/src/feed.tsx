@@ -4,7 +4,16 @@ import {
   type PostData,
 } from "./reducers/form-reducer.tsx";
 
-const PostArticle = ({ id, user, date, title, description, deletePost }) => {
+const PostArticle = ({
+  id,
+  userId,
+  user,
+  date,
+  title,
+  description,
+  deletePost,
+  currentUser,
+}) => {
   const handleDeletePost = (e, id) => {
     e.preventDefault();
     fetch("http://localhost:8080/post/deletePost", {
@@ -15,23 +24,35 @@ const PostArticle = ({ id, user, date, title, description, deletePost }) => {
       .catch((e) => console.error(e));
     deletePost(id);
   };
-
   return (
     <article className="posts-article">
-      <h3>{user}</h3>
+      <h2>
+        {currentUser === userId ? (
+          <>
+            {user}
+            <span className="my-user">You</span>
+          </>
+        ) : (
+          user
+        )}
+      </h2>
       <p className="date">{date.toString()}</p>
       <div className="PostData">
-        <h2>{title}</h2>
+        <h3>{title}</h3>
         <p>{description}</p>
       </div>
-      <button
-        className="button-action"
-        onClick={(e) => {
-          handleDeletePost(e, id);
-        }}
-      >
-        Delete
-      </button>
+      {currentUser === userId ? (
+        <button
+          className="button-action"
+          onClick={(e) => {
+            handleDeletePost(e, id);
+          }}
+        >
+          Delete
+        </button>
+      ) : (
+        <></>
+      )}
     </article>
   );
 };
@@ -42,21 +63,29 @@ type FeedProps = {
 };
 
 export const Feed = ({ data, deletePost }: FeedProps) => {
-  console.log(data,"feed")
+  const channelsFeed = { myId: 1, subscribers: [2] };
+  const posts = data.posts.filter((x) => {
+    return (
+      x.userId === channelsFeed.myId ||
+      channelsFeed.subscribers.includes(x.userId)
+    );
+  });
   return (
     <div className="feed posts">
-      <h1>posts</h1>
+      <h1>Feed</h1>
       <div className="feedData">
-        {data.posts.length > 0 ? (
-          data.posts.map((f) => (
+        {posts.length > 0 ? (
+          posts.map((f) => (
             <PostArticle
               key={f._id}
               id={f._id}
+              userId={f.userId}
               user={f.user}
               date={f.date}
               description={f.description}
               title={f.title}
               deletePost={deletePost}
+              currentUser={channelsFeed.myId}
             />
           ))
         ) : (
