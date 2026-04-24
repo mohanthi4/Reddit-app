@@ -4,6 +4,7 @@ import { cors } from "hono/cors";
 import Readit from "./readit.ts";
 import {
   serveAddPost,
+  serveAddSubscriber,
   serveCheckUser,
   serveDeletePost,
   serveFeedInfo,
@@ -25,6 +26,7 @@ export const CreateApp = (userData: User, postData: Readit) => {
   app.get("/get/feedInfo", serveFeedInfo);
   app.get("/get/checkUser", serveCheckUser);
   app.get("/get/subscribers", serveSubcribers);
+  app.post("/post/addSubscriber", serveAddSubscriber);
   app.post("/post/loginUser", serveLoginUser);
   app.post("/post/addPost", serveAddPost);
   app.post("/post/deletePost", serveDeletePost);

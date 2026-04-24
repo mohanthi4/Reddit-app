@@ -1,12 +1,18 @@
 import { useReducer, useState, useEffect } from "react";
 
 const SearchList = ({ searchList, handleSubscribeUser }) => {
-  const handleSubscribe = (e, id, user) => {
-    const content = { id, user, isSubscribe: true };
-    console.log(content, "add subscribe");
-    handleSubscribeUser(content);
+  const handleSubscribe = (e, id) => {
+    console.log(id, "adds");
+    fetch("http://localhost:8080/post/addSubscriber", {
+      method: "post",
+      body: JSON.stringify(id),
+      credentials: "include",
+    })
+      .then((x) => x.json())
+      .catch((e) => console.error(e));
+    handleSubscribeUser(id);
   };
-  console.log(searchList, "evry change");
+  console.log(searchList, "after sub");
   return (
     <ul className="lists">
       {searchList.map((s) => (
@@ -17,10 +23,7 @@ const SearchList = ({ searchList, handleSubscribeUser }) => {
               Subscribed ✓
             </button>
           ) : (
-            <button
-              className="blue"
-              onClick={(e) => handleSubscribe(e, s.id, s.user)}
-            >
+            <button className="blue" onClick={(e) => handleSubscribe(e, s.id)}>
               Subscribe
             </button>
           )}
@@ -38,11 +41,11 @@ export const SearchLabel = ({ usersData, handleSubscribeUser }) => {
     if (value) {
       const lists = usersData.filter((x) => x.user.includes(value));
       setSearchData(lists);
-      console.log(usersData, "every search");
     } else {
       setSearchData([]);
     }
   };
+  console.log(usersData, "every search");
   return (
     <div className="search posts">
       <label>

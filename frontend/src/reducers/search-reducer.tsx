@@ -7,8 +7,7 @@ export const subscribersReduce = (usersData, action) => {
     }
     case "add-subscriber": {
       return produce(usersData, (draft) => {
-        const index = draft.all.findIndex((x) => x.id === action.content.id);
-        console.log(index, "index");
+        const index = draft.all.findIndex((x) => x.id === action.content);
         draft.all[index].isSubscribe = true;
       });
     }

@@ -26,4 +26,15 @@ export default class User {
     const data = await this.#users.find({ _id: +Id }).toArray();
     return data[0].subscribers;
   }
+
+  async addSubscriber(Id, id) {
+    await this.#users.updateOne(
+      { _id: +Id },
+      { $push: { subscribers: +id } },
+    );
+
+    const updatedUser = await this.#users.findOne({ _id: +Id });
+
+    return updatedUser;
+  }
 }

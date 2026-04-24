@@ -84,3 +84,13 @@ export const serveSubcribers = async (c) => {
   const finalData = getUsersValidData(allUsers, subscribers);
   return c.json({ all: finalData, current: userId });
 };
+
+export const serveAddSubscriber = async (c) => {
+  const user_id = getCookie(c, "user_id");
+  const userId = parseInt(user_id);
+  const users = c.get("usersClass");
+  const id = await c.req.json();
+
+  const finalData = users.addSubscriber(userId, id);
+  return c.json(finalData);
+};
