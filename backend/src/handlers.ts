@@ -11,10 +11,9 @@ export const serveFeedInfo: honoHandler = async (c) => {
     const users = c.get("usersClass");
     const userId = parseInt(user_id);
     const ids = await users.userSubcribres(userId);
-    console.log(ids, "ids means subscribers");
     ids.push(userId);
+    console.log(ids, "ids means subscribers");
     const content = await readit.getAllPosts(ids);
-    console.log(content, "all data without user");
     const finalData = {};
     finalData.posts = await Promise.all(
       content.posts.map(async (ele) => {
@@ -27,7 +26,7 @@ export const serveFeedInfo: honoHandler = async (c) => {
     );
     finalData.nextId = content.nextId;
     finalData.posts.reverse();
-    console.log("final feed", finalData);
+    console.log(finalData, "---> feed data");
     return c.json(finalData);
   }
 };

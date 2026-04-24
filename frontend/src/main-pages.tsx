@@ -45,6 +45,10 @@ export const Home = () => {
     dispatchFeed({ type: "delete-post", content: id });
   };
 
+  const handleLikePost = (content) => {
+    dispatchFeed({ type: "add-like", content });
+  };
+
   return (
     <div className="form">
       {/* <SearchLabel
@@ -56,6 +60,7 @@ export const Home = () => {
         data={feedData}
         deletePost={handleDeletePost}
         usersData={usersData}
+        handleLikePost={handleLikePost}
       />
     </div>
   );

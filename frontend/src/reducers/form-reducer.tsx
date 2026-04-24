@@ -40,5 +40,16 @@ export const formReducer: FormReducer = (feedData, action) => {
     case "init-posts": {
       return produce(feedData, (draft) => action.content);
     }
+
+    case "add-like": {
+      return produce(feedData, (draft) => {
+        const feedIndex = draft.posts.findIndex(
+          (post) => post._id === action.content.id,
+        );
+        draft.posts[feedIndex].likes++;
+        draft.posts[feedIndex].likedUsers.push(action.content.currentUser);
+        console.log(draft, "---> in reducer");
+      });
+    }
   }
 };
