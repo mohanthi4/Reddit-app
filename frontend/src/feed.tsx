@@ -73,45 +73,46 @@ export const Feed = ({ data, deletePost, usersData }: FeedProps) => {
   const feed = usersData.all.filter((x) => x.isSubscribe);
   const data1 = feed.map((x) => x.id);
   const channelsFeed = { myId: usersData.current, subscribers: data1 };
-  // const posts = data.posts.filter((x) => {
-  //   return (
-  //     x.userId === channelsFeed.myId ||
-  //     channelsFeed.subscribers.includes(x.userId)
-  //   );
-  // });
+  const posts = data.posts.filter((x) => {
+    return (
+      x.userId === channelsFeed.myId ||
+      channelsFeed.subscribers.includes(x.userId)
+    );
+  });
+  console.log("post all", posts);
 
-  const posts = [
-    {
-      _id: 1,
-      userId: 1,
-      user: "John",
-      date: "23/12/2024",
-      description: "1 desc",
-      title: "1",
-      likes: 2,
-      likedUsers: [1, 3],
-    },
-    {
-      _id: 2,
-      userId: 1,
-      user: "John",
-      date: "23/11/2024",
-      description: "2 desc",
-      title: "2",
-      likes: 3,
-      likedUsers: [4, 2, 3],
-    },
-    {
-      _id: 3,
-      userId: 2,
-      user: "Alex",
-      date: "23/10/2024",
-      description: "3 desc",
-      title: "3",
-      likes: 2,
-      likedUsers: [1, 3],
-    },
-  ];
+  // const posts = [
+  //   {
+  //     _id: 1,
+  //     userId: 1,
+  //     user: "John",
+  //     date: "23/12/2024",
+  //     description: "1 desc",
+  //     title: "1",
+  //     likes: 2,
+  //     likedUsers: [1, 3],
+  //   },
+  //   {
+  //     _id: 2,
+  //     userId: 1,
+  //     user: "John",
+  //     date: "23/11/2024",
+  //     description: "2 desc",
+  //     title: "2",
+  //     likes: 3,
+  //     likedUsers: [4, 2, 3],
+  //   },
+  //   {
+  //     _id: 3,
+  //     userId: 2,
+  //     user: "Alex",
+  //     date: "23/10/2024",
+  //     description: "3 desc",
+  //     title: "3",
+  //     likes: 2,
+  //     likedUsers: [1, 3],
+  //   },
+  // ];
   return (
     <div className="feed posts">
       <h1>Feed</h1>

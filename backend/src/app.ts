@@ -12,12 +12,10 @@ import {
   serveSubcribers,
 } from "./handlers.ts";
 import User from "./user.ts";
-import PostLikes from "./post-likes.tsx";
 
 export const CreateApp = (
   userData: User,
   postData: Readit,
-  postlLikesData: PostLikes,
 ) => {
   const app = new Hono();
 
@@ -26,7 +24,6 @@ export const CreateApp = (
   app.use(async (c, next) => {
     c.set("postsClass", postData);
     c.set("usersClass", userData);
-    c.set("postlLikesData", postlLikesData);
     await next();
   });
   app.get("/get/feedInfo", serveFeedInfo);
