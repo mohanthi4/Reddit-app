@@ -23,7 +23,6 @@ export const serveFeedInfo: honoHandler = async (c) => {
       }),
     );
     finalData.nextId = content.nextId;
-    console.log(finalData, "after map");
     finalData.posts.reverse();
     return c.json(finalData);
   }
@@ -36,7 +35,6 @@ export const serveAddPost: honoHandler = async (c) => {
   const { title, description, date } = await c.req.json();
   const finalData = { title, description, date, userId };
   const data = await readit.addPost(finalData);
-  console.log(data);
   return c.json(data);
 };
 
@@ -51,7 +49,6 @@ export const serveCheckUser = async (c) => {
   const userId = getCookie(c, "user_id");
   const users = c.get("usersClass");
   const user = await users.getUserName(userId);
-  console.log(user, "name");
 
   const { status } = userId ? { status: true } : { status: false };
 

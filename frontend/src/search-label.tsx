@@ -1,16 +1,28 @@
 import { useReducer, useState, useEffect } from "react";
-import { subscribersReduce } from "./reducers/search-reducer.tsx";
 
-const SearchList = ({ searchList }) => {
+const SearchList = ({ searchList, handleSubscribeUser }) => {
+  const handleSubscribe = (e, id, user) => {
+    const content = { id, user, isSubscribe: true };
+    console.log(content, "add subscribe");
+    handleSubscribeUser(content);
+  };
+  console.log(searchList, "evry change");
   return (
     <ul className="lists">
       {searchList.map((s) => (
         <li key={s.id}>
           <h1>{s.user}</h1>
           {s.isSubscribe ? (
-            <button className="green">Subscribed ✓</button>
+            <button className="green" disabled>
+              Subscribed ✓
+            </button>
           ) : (
-            <button className="blue">Subscribe</button>
+            <button
+              className="blue"
+              onClick={(e) => handleSubscribe(e, s.id, s.user)}
+            >
+              Subscribe
+            </button>
           )}
         </li>
       ))}
@@ -18,7 +30,7 @@ const SearchList = ({ searchList }) => {
   );
 };
 
-export const SearchLabel = ({ usersData }) => {
+export const SearchLabel = ({ usersData, handleSubscribeUser }) => {
   const [searchData, setSearchData] = useState([]);
 
   const handleSearch = (e) => {
@@ -26,6 +38,7 @@ export const SearchLabel = ({ usersData }) => {
     if (value) {
       const lists = usersData.filter((x) => x.user.includes(value));
       setSearchData(lists);
+      console.log(usersData, "every search");
     } else {
       setSearchData([]);
     }
@@ -36,7 +49,14 @@ export const SearchLabel = ({ usersData }) => {
         <h2>Search Users</h2>
       </label>
       <input type="text" onChange={handleSearch} />
-      {searchData.length > 0 ? <SearchList searchList={searchData} /> : <p></p>}
+      {searchData.length > 0 ? (
+        <SearchList
+          searchList={searchData}
+          handleSubscribeUser={handleSubscribeUser}
+        />
+      ) : (
+        <p></p>
+      )}
       <button className="button-search">Search</button>
     </div>
   );

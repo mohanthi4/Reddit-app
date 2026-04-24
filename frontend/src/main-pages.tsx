@@ -10,7 +10,6 @@ export const Home = () => {
     nextId: 1,
     posts: [],
   });
-  console.log("in feed");
 
   useEffect(() => {
     fetch("http://localhost:8080/get/feedInfo", { credentials: "include" })
@@ -34,6 +33,10 @@ export const Home = () => {
       });
   }, []);
 
+  const handleSubscribeUser = (content) => {
+    dispatch({ type: "add-subscriber", content });
+  };
+
   const handleAddPost = (content: PostData) => {
     dispatchFeed({ type: "add-post", content });
   };
@@ -44,7 +47,10 @@ export const Home = () => {
 
   return (
     <div className="form">
-      <SearchLabel usersData={usersData.all} />
+      <SearchLabel
+        usersData={usersData.all}
+        handleSubscribeUser={handleSubscribeUser}
+      />
       <FormCreation addPost={handleAddPost} current={usersData.current} />
       <Feed
         data={feedData}
