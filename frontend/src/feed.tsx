@@ -57,6 +57,7 @@ const PostArticle = ({
       .catch((e) => console.error(e));
   };
 
+  console.log(likedUsers, id);
   const isLiked = likedUsers.includes(currentUser);
   return (
     <article className="posts-article">

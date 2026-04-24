@@ -5,14 +5,12 @@ type honoHandler = (data: Context) => Promise<Response>;
 
 export const serveFeedInfo: honoHandler = async (c) => {
   const user_id = getCookie(c, "user_id");
-  // const user_id = 1;
   if (user_id) {
     const readit = c.get("postsClass");
     const users = c.get("usersClass");
     const userId = parseInt(user_id);
     const ids = await users.userSubcribres(userId);
     ids.push(userId);
-    console.log(ids, "ids means subscribers");
     const content = await readit.getAllPosts(ids);
     const finalData = {};
     finalData.posts = await Promise.all(
@@ -26,7 +24,7 @@ export const serveFeedInfo: honoHandler = async (c) => {
     );
     finalData.nextId = content.nextId;
     finalData.posts.reverse();
-    console.log(finalData, "---> feed data");
+    console.log(finalData);
     return c.json(finalData);
   }
 };
@@ -35,9 +33,19 @@ export const serveAddPost: honoHandler = async (c) => {
   const readit = c.get("postsClass");
   const user_id = getCookie(c, "user_id");
   const userId = parseInt(user_id);
-  const { title, description, date } = await c.req.json();
-  const finalData = { title, description, date, userId };
+  const { title, description, date, likes, likedUsers, user } = await c.req
+    .json();
+  const finalData = {
+    title,
+    description,
+    date,
+    likes,
+    likedUsers,
+    user,
+    userId,
+  };
   const data = await readit.addPost(finalData);
+  console.log(data);
   return c.json(data);
 };
 
@@ -105,7 +113,6 @@ export const serveAddLike = async (c) => {
   const readit = c.get("postsClass");
   const id = await c.req.json();
   const data = await readit.addLike(userId, id);
-  console.log("--> data", data);
   return c.json(data);
 };
 
@@ -117,6 +124,5 @@ export const serveUnLike = async (c) => {
   const id = await c.req.json();
   // const id = 2;
   const data = await readit.unLike(userId, id);
-  console.log("--> data", data);
   return c.json(data);
 };

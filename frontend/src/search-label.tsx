@@ -2,7 +2,6 @@ import { useReducer, useState, useEffect } from "react";
 
 const SearchList = ({ searchList, handleSubscribeUser }) => {
   const handleSubscribe = (e, id) => {
-    // console.log(id, "adds");
     fetch("http://localhost:8080/post/addSubscriber", {
       method: "post",
       body: JSON.stringify(id),
@@ -12,7 +11,6 @@ const SearchList = ({ searchList, handleSubscribeUser }) => {
       .catch((e) => console.error(e));
     handleSubscribeUser(id);
   };
-  console.log(searchList, "after sub");
   return (
     <ul className="lists">
       {searchList.map((s) => (
@@ -45,7 +43,6 @@ export const SearchLabel = ({ usersData, handleSubscribeUser }) => {
       setSearchData([]);
     }
   };
-  console.log(usersData, "every search");
   return (
     <div className="search posts">
       <label>

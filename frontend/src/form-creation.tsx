@@ -12,7 +12,9 @@ const getPostInfo = (e, userName, current) => {
   const title = formData.get("title")?.toString();
   const description = formData.get("description")?.toString();
   const date = new Date().toString();
-  return { user, userId: current, title, description, date };
+  const likes = 0;
+  const likedUsers = [];
+  return { user, userId: current, title, description, date, likes, likedUsers };
 };
 
 export const FormCreation = ({ addPost, current }: AddPosts) => {
@@ -26,9 +28,8 @@ export const FormCreation = ({ addPost, current }: AddPosts) => {
       credentials: "include",
     })
       .then((x) => x.json())
+      .then((posts) => addPost(posts))
       .catch((e) => console.log(e));
-    console.log(posts, "adding");
-    addPost(posts);
   };
 
   return (

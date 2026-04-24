@@ -24,7 +24,7 @@ export const formReducer: FormReducer = (feedData, action) => {
   switch (action.type) {
     case "add-post": {
       return produce(feedData, (draft) => {
-        draft.posts.unshift({ ...action.content, _id: draft.nextId++ });
+        draft.posts.unshift(action.content);
       });
     }
 

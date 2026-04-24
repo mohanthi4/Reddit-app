@@ -6,7 +6,6 @@ export const LoginReducer = (loginInfo, action) => {
       return produce(loginInfo, (draft) => action.content);
     }
     case "user-login": {
-      console.log(action.content);
       return produce(loginInfo, (draft) => action.content);
     }
   }

@@ -15,7 +15,6 @@ export const Home = () => {
     fetch("http://localhost:8080/get/feedInfo", { credentials: "include" })
       .then((data) => data.json())
       .then((data) => {
-        console.log("in fetch", data);
         dispatchFeed({ type: "init-posts", content: data });
       });
   }, []);
@@ -54,11 +53,11 @@ export const Home = () => {
 
   return (
     <div className="form">
-      {/* <SearchLabel
+      <SearchLabel
         usersData={usersData.all}
         handleSubscribeUser={handleSubscribeUser}
-      /> */}
-      {/* <FormCreation addPost={handleAddPost} current={usersData.current} /> */}
+      />
+      <FormCreation addPost={handleAddPost} current={usersData.current} />
       <Feed
         data={feedData}
         deletePost={handleDeletePost}

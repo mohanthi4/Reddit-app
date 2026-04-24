@@ -23,7 +23,6 @@ const App = () => {
   const handleUsersLogin = (content: string) => {
     dispatch({ type: "user-login", content });
   };
-  console.log(loginInfo, "in main");
   return (
     <>
       {loginInfo.status ? (

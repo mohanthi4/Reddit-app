@@ -23,21 +23,7 @@ export const createClient = async () => {
   const db = client.db("readit");
   const postData = db.collection<PostsSchema>("feed-data");
   const userData = db.collection<UsersSchema>("users-data");
-  // const postLikes = db.collection<PostLikes>("post-likes");
-  // const body1 = { _id: 1, user: "John", password: "123", subscribers: [2, 4] };
-  // const data1 = {
-  //   _id: 5,
-  //   userId: 1,
-  //   user: "John",
-  //   date: "23/12/2024",
-  //   description: "5 desc",
-  //   title: "5",
-  //   likes: 2,
-  //   likedUsers: [3, 4],
-  // };
-
-  // await postData.insertOne(data1);
-
+  await postData.deleteOne({ _id: 6 });
   const lastPost = await postData
     .find({})
     .sort({ _id: -1 })

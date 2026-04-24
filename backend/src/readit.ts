@@ -17,7 +17,8 @@ export default class Readit {
   async addPost(data: PostData) {
     data._id = this.#nextId++;
     await this.#posts.insertOne(data);
-    return { status: "success" };
+    const content = await this.#posts.find().toArray();
+    return content;
   }
   async deletePost(_id: number) {
     await this.#posts.deleteOne({ _id });
