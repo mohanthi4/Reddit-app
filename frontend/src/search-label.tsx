@@ -2,7 +2,7 @@ import { useReducer, useState, useEffect } from "react";
 
 const SearchList = ({ searchList, handleSubscribeUser }) => {
   const handleSubscribe = (e, id) => {
-    console.log(id, "adds");
+    // console.log(id, "adds");
     fetch("http://localhost:8080/post/addSubscriber", {
       method: "post",
       body: JSON.stringify(id),

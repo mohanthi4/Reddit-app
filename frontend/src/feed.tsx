@@ -11,6 +11,7 @@ const PostArticle = ({
   date,
   title,
   description,
+  // likes,
   deletePost,
   currentUser,
 }) => {
@@ -53,6 +54,7 @@ const PostArticle = ({
       ) : (
         <></>
       )}
+      <button className="likes">Liked 2</button>
     </article>
   );
 };
@@ -87,6 +89,7 @@ export const Feed = ({ data, deletePost, usersData }: FeedProps) => {
               date={f.date}
               description={f.description}
               title={f.title}
+              // likes={f.likes}
               deletePost={deletePost}
               currentUser={channelsFeed.myId}
             />
