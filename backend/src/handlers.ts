@@ -4,12 +4,17 @@ import { getCookie, setCookie } from "hono/cookie";
 type honoHandler = (data: Context) => Promise<Response>;
 
 export const serveFeedInfo: honoHandler = async (c) => {
-  const user_id = getCookie(c, "user_id");
+  // const user_id = getCookie(c, "user_id");
+  const user_id = 2;
   if (user_id) {
     const readit = c.get("postsClass");
     const users = c.get("usersClass");
     const userId = parseInt(user_id);
-    const data = await readit.getPosts(userId);
+    const ids = await users.userSubcribres(userId);
+    ids.push(userId);
+    console.log(ids, "ids");
+    // const data = await readit.getPosts(userId);
+    const data = await readit.getAllPosts(ids);
     const userName = await users.getUserName(userId);
     data.posts.map((ele) => ele.user = userName);
     data.posts.reverse();
@@ -54,7 +59,7 @@ export const serveLoginUser = async (c) => {
   return c.json({ status, user });
 };
 
-const getUsersValidData = (users,subscribers) => {
+const getUsersValidData = (users, subscribers) => {
   return users.map((user) => {
     const creator = user;
     creator.isSubscribe = subscribers.includes(user._id);
@@ -64,17 +69,14 @@ const getUsersValidData = (users,subscribers) => {
       isSubscribe: creator.isSubscribe,
     };
   });
-}
+};
 
 export const serveSubcribers = async (c) => {
   const user_id = getCookie(c, "user_id");
   const userId = parseInt(user_id);
-  // const userId = 1;
   const users = c.get("usersClass");
   const allUsers = await users.getAllUsers(userId);
   const subscribers = await users.userSubcribres(userId);
-  const finalData = getUsersValidData(allUsers,subscribers)
+  const finalData = getUsersValidData(allUsers, subscribers);
   return c.json(finalData);
 };
-
-

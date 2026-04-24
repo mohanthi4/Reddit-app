@@ -28,4 +28,11 @@ export default class Readit {
     await this.#posts.deleteOne({ _id });
     return { status: "success" };
   }
+
+  async getAllPosts(Ids) {
+    const data = await this.#posts.find({ userId: { $in: [...Ids] } })
+      .toArray();
+    console.log(data, "posts");
+    return { posts: data, nextId: this.#nextId };
+  }
 }

@@ -22,9 +22,9 @@ export const CreateApp = (userData: User, postData: Readit) => {
     c.set("usersClass", userData);
     await next();
   });
-  app.get("/get/feedInfo", serveFeedInfo);
+  // app.get("/get/feedInfo", serveFeedInfo);
   app.get("/get/checkUser", serveCheckUser);
-  app.get("/get/subscribers",serveSubcribers)
+  app.get("/get/subscribers", serveSubcribers);
   app.post("/post/loginUser", serveLoginUser);
   app.post("/post/addPost", serveAddPost);
   app.post("/post/deletePost", serveDeletePost);
