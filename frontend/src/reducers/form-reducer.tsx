@@ -44,10 +44,9 @@ export const formReducer: FormReducer = (feedData, action) => {
     case "add-like": {
       return produce(feedData, (draft) => {
         const feedIndex = draft.posts.findIndex(
-          (post) => post._id === action.content.id,
+          (post) => post._id === action.content._id,
         );
-        draft.posts[feedIndex].likes++;
-        draft.posts[feedIndex].likedUsers.push(action.content.currentUser);
+        draft.posts[feedIndex] = action.content;
       });
     }
 
@@ -56,8 +55,7 @@ export const formReducer: FormReducer = (feedData, action) => {
         const feedIndex = draft.posts.findIndex(
           (post) => post._id === action.content.id,
         );
-        draft.posts[feedIndex].likes--;
-        draft.posts[feedIndex].likedUsers.splice(action.content.currentUser, 1);
+        draft.posts[feedIndex] = action.content;
       });
     }
   }

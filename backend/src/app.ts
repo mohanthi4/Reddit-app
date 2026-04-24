@@ -11,6 +11,7 @@ import {
   serveFeedInfo,
   serveLoginUser,
   serveSubcribers,
+  serveUnLike,
 } from "./handlers.ts";
 import User from "./user.ts";
 
@@ -31,6 +32,7 @@ export const CreateApp = (
   app.get("/get/checkUser", serveCheckUser);
   app.get("/get/subscribers", serveSubcribers);
   app.post("/post/addLike", serveAddLike);
+  app.post("/post/unLike", serveUnLike);
   app.post("/post/addSubscriber", serveAddSubscriber);
   app.post("/post/loginUser", serveLoginUser);
   app.post("/post/addPost", serveAddPost);

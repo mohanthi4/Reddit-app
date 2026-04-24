@@ -31,8 +31,6 @@ export default class Readit {
   }
 
   async addLike(Uid, id) {
-    const beforeUser = await this.#posts.findOne({ _id: id });
-    console.log("---> before", beforeUser);
     await this.#posts.updateOne(
       { _id: id },
       {
@@ -41,7 +39,18 @@ export default class Readit {
       },
     );
     const updatedUser = await this.#posts.findOne({ _id: id });
-    console.log("---> after", updatedUser);
+    return updatedUser;
+  }
+
+  async unLike(Uid, id) {
+    await this.#posts.updateOne(
+      { _id: id },
+      {
+        $pull: { likedUsers: Uid },
+        $inc: { likes: -1 },
+      },
+    );
+    const updatedUser = await this.#posts.findOne({ _id: id });
     return updatedUser;
   }
 }

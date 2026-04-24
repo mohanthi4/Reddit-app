@@ -37,13 +37,24 @@ const PostArticle = ({
       credentials: "include",
     })
       .then((x) => x.json())
+      .then((content) => {
+        handleLikePost(content);
+      })
       .catch((e) => console.error(e));
-    handleLikePost(content);
   };
 
   const handleUnlike = (e, id) => {
     const content = { id, currentUser };
-    handleUnlikePost(content);
+    fetch("http://localhost:8080/post/unLike", {
+      method: "post",
+      body: JSON.stringify(id),
+      credentials: "include",
+    })
+      .then((x) => x.json())
+      .then((content) => {
+        handleUnlikePost(content);
+      })
+      .catch((e) => console.error(e));
   };
 
   const isLiked = likedUsers.includes(currentUser);

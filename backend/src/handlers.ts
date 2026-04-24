@@ -104,8 +104,19 @@ export const serveAddLike = async (c) => {
   // const userId = 1;
   const readit = c.get("postsClass");
   const id = await c.req.json();
+  const data = await readit.addLike(userId, id);
+  console.log("--> data", data);
+  return c.json(data);
+};
+
+export const serveUnLike = async (c) => {
+  const user_id = getCookie(c, "user_id");
+  const userId = parseInt(user_id);
+  // const userId = 1;
+  const readit = c.get("postsClass");
+  const id = await c.req.json();
   // const id = 2;
-  console.log("input : user", userId, "id", id);
-  const data = readit.addLike(userId, id);
+  const data = await readit.unLike(userId, id);
+  console.log("--> data", data);
   return c.json(data);
 };
