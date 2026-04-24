@@ -25,42 +25,19 @@ export const createClient = async () => {
   const userData = db.collection<UsersSchema>("users-data");
   // const postLikes = db.collection<PostLikes>("post-likes");
   // const body1 = { _id: 1, user: "John", password: "123", subscribers: [2, 4] };
-  // const body2 = { _id: 2, user: "Alex", password: "123", subscribers: [1, 3] };
   // const data1 = {
-  //   _id: 1,
+  //   _id: 5,
   //   userId: 1,
   //   user: "John",
   //   date: "23/12/2024",
-  //   description: "1 desc",
-  //   title: "1",
+  //   description: "5 desc",
+  //   title: "5",
   //   likes: 2,
-  //   likedUsers: [1, 3],
+  //   likedUsers: [3, 4],
   // };
-  // const data2 = {
-  //   _id: 2,
-  //   userId: 1,
-  //   user: "John",
-  //   date: "23/11/2024",
-  //   description: "2 desc",
-  //   title: "2",
-  //   likes: 3,
-  //   likedUsers: [4, 2, 3],
-  // };
-  // const data3 = {
-  //   _id: 3,
-  //   userId: 2,
-  //   user: "Alex",
-  //   date: "23/10/2024",
-  //   description: "3 desc",
-  //   title: "3",
-  //   likes: 2,
-  //   likedUsers: [1, 3],
-  // };
+
   // await postData.insertOne(data1);
-  // await postData.insertOne(data2);
-  // await postData.insertOne(data3);
-  // await userData.insertOne(body1);
-  // await userData.insertOne(body2);
+
   const lastPost = await postData
     .find({})
     .sort({ _id: -1 })

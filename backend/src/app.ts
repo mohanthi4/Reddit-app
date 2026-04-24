@@ -3,6 +3,7 @@ import { Hono } from "hono";
 import { cors } from "hono/cors";
 import Readit from "./readit.ts";
 import {
+  serveAddLike,
   serveAddPost,
   serveAddSubscriber,
   serveCheckUser,
@@ -29,6 +30,7 @@ export const CreateApp = (
   app.get("/get/feedInfo", serveFeedInfo);
   app.get("/get/checkUser", serveCheckUser);
   app.get("/get/subscribers", serveSubcribers);
+  app.post("/post/addLike", serveAddLike);
   app.post("/post/addSubscriber", serveAddSubscriber);
   app.post("/post/loginUser", serveLoginUser);
   app.post("/post/addPost", serveAddPost);

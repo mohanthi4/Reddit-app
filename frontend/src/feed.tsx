@@ -31,9 +31,17 @@ const PostArticle = ({
   const handleLike = (e, id) => {
     const content = { id, currentUser };
     console.log("--->in like click", content);
+    fetch("http://localhost:8080/post/addLike", {
+      method: "post",
+      body: JSON.stringify(id),
+      credentials: "include",
+    })
+      .then((x) => x.json())
+      .catch((e) => console.error(e));
     handleLikePost(content);
   };
 
+  const isLiked = likedUsers.includes(currentUser);
   return (
     <article className="posts-article">
       <h2>
@@ -63,13 +71,14 @@ const PostArticle = ({
       ) : (
         <></>
       )}
-      {likedUsers.includes(currentUser) ? (
-        <button className="like-true likes">Liked {likes}</button>
-      ) : (
-        <button className="likes" onClick={(e) => handleLike(e, id)}>
-          Liked {likes}
-        </button>
-      )}
+      <button
+        className={`likes ${isLiked ? "like-true" : ""}`}
+        onClick={(e) => {
+          if (!isLiked) handleLike(e, id);
+        }}
+      >
+        Liked {likes}
+      </button>
     </article>
   );
 };

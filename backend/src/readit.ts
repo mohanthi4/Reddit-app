@@ -14,11 +14,6 @@ export default class Readit {
     this.#nextId = nextId;
   }
 
-  async getPosts(Id) {
-    const data = await this.#posts.find({ userId: +Id }).toArray();
-    return { posts: data, nextId: this.#nextId };
-  }
-
   async addPost(data: PostData) {
     data._id = this.#nextId++;
     await this.#posts.insertOne(data);
@@ -33,5 +28,20 @@ export default class Readit {
     const data = await this.#posts.find({ userId: { $in: [...Ids] } })
       .toArray();
     return { posts: data, nextId: this.#nextId };
+  }
+
+  async addLike(Uid, id) {
+    const beforeUser = await this.#posts.findOne({ _id: id });
+    console.log("---> before", beforeUser);
+    await this.#posts.updateOne(
+      { _id: id },
+      {
+        $push: { likedUsers: Uid },
+        $inc: { likes: 1 },
+      },
+    );
+    const updatedUser = await this.#posts.findOne({ _id: id });
+    console.log("---> after", updatedUser);
+    return updatedUser;
   }
 }
