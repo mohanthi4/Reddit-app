@@ -16,6 +16,7 @@ const PostArticle = ({
   deletePost,
   currentUser,
   handleLikePost,
+  handleUnlikePost,
 }) => {
   const handleDeletePost = (e, id) => {
     e.preventDefault();
@@ -30,7 +31,6 @@ const PostArticle = ({
 
   const handleLike = (e, id) => {
     const content = { id, currentUser };
-    console.log("--->in like click", content);
     fetch("http://localhost:8080/post/addLike", {
       method: "post",
       body: JSON.stringify(id),
@@ -39,6 +39,11 @@ const PostArticle = ({
       .then((x) => x.json())
       .catch((e) => console.error(e));
     handleLikePost(content);
+  };
+
+  const handleUnlike = (e, id) => {
+    const content = { id, currentUser };
+    handleUnlikePost(content);
   };
 
   const isLiked = likedUsers.includes(currentUser);
@@ -72,9 +77,10 @@ const PostArticle = ({
         <></>
       )}
       <button
-        className={`likes ${isLiked ? "like-true" : ""}`}
+        className={`likes ${isLiked ? "like-true" : "unlike"}`}
         onClick={(e) => {
           if (!isLiked) handleLike(e, id);
+          else handleUnlike(e, id);
         }}
       >
         Liked {likes}
@@ -93,6 +99,7 @@ export const Feed = ({
   deletePost,
   usersData,
   handleLikePost,
+  handleUnlikePost,
 }: FeedProps) => {
   const feed = usersData.all.filter((x) => x.isSubscribe);
   const data1 = feed.map((x) => x.id);
@@ -123,6 +130,7 @@ export const Feed = ({
               deletePost={deletePost}
               handleLikePost={handleLikePost}
               currentUser={channelsFeed.myId}
+              handleUnlikePost={handleUnlikePost}
             />
           ))
         ) : (

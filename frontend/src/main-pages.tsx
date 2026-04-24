@@ -48,6 +48,9 @@ export const Home = () => {
   const handleLikePost = (content) => {
     dispatchFeed({ type: "add-like", content });
   };
+  const handleUnlikePost = (content) => {
+    dispatchFeed({ type: "unlike-post", content });
+  };
 
   return (
     <div className="form">
@@ -61,6 +64,7 @@ export const Home = () => {
         deletePost={handleDeletePost}
         usersData={usersData}
         handleLikePost={handleLikePost}
+        handleUnlikePost={handleUnlikePost}
       />
     </div>
   );

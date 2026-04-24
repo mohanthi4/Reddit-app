@@ -48,7 +48,16 @@ export const formReducer: FormReducer = (feedData, action) => {
         );
         draft.posts[feedIndex].likes++;
         draft.posts[feedIndex].likedUsers.push(action.content.currentUser);
-        console.log(draft, "---> in reducer");
+      });
+    }
+
+    case "unlike-post": {
+      return produce(feedData, (draft) => {
+        const feedIndex = draft.posts.findIndex(
+          (post) => post._id === action.content.id,
+        );
+        draft.posts[feedIndex].likes--;
+        draft.posts[feedIndex].likedUsers.splice(action.content.currentUser, 1);
       });
     }
   }
