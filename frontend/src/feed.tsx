@@ -63,10 +63,8 @@ type FeedProps = {
 };
 
 export const Feed = ({ data, deletePost, usersData }: FeedProps) => {
-  console.log(usersData, "every full");
   const feed = usersData.all.filter((x) => x.isSubscribe);
   const data1 = feed.map((x) => x.id);
-  console.log("usersData", data1, "myid", usersData.current);
   const channelsFeed = { myId: usersData.current, subscribers: data1 };
   const posts = data.posts.filter((x) => {
     return (
@@ -74,7 +72,6 @@ export const Feed = ({ data, deletePost, usersData }: FeedProps) => {
       channelsFeed.subscribers.includes(x.userId)
     );
   });
-  console.log(data, "this all");
 
   return (
     <div className="feed posts">

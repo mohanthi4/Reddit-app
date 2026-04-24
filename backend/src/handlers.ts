@@ -35,8 +35,8 @@ export const serveAddPost: honoHandler = async (c) => {
   const userId = parseInt(user_id);
   const { title, description, date } = await c.req.json();
   const finalData = { title, description, date, userId };
-  console.log(finalData);
   const data = await readit.addPost(finalData);
+  console.log(data);
   return c.json(data);
 };
 

@@ -21,43 +21,6 @@ export const Home = () => {
       });
   }, []);
 
-  // const feedData = {
-  //   nextId: 5,
-  //   posts: [
-  //     {
-  //       _id: 1,
-  //       userId: 1,
-  //       user: "John",
-  //       title: "hi",
-  //       description: "welcome to new",
-  //       date: "20/12/2024",
-  //     },
-  //     {
-  //       _id: 2,
-  //       userId: 2,
-  //       user: "Alex",
-  //       title: "Well",
-  //       description: "welcome to old",
-  //       date: "20/11/2024",
-  //     },
-  //     {
-  //       _id: 3,
-  //       userId: 3,
-  //       user: "Ram",
-  //       title: "super",
-  //       description: "wow",
-  //       date: "20/10/2024",
-  //     },
-  //     {
-  //       _id: 4,
-  //       userId: 1,
-  //       user: "John",
-  //       title: "yay",
-  //       description: "it works...",
-  //       date: "20/09/2024",
-  //     },
-  //   ],
-  // };
   const [usersData, dispatch] = useReducer(subscribersReduce, {
     all: [],
     current: 0,
@@ -82,7 +45,7 @@ export const Home = () => {
   return (
     <div className="form">
       <SearchLabel usersData={usersData.all} />
-      <FormCreation addPost={handleAddPost} />
+      <FormCreation addPost={handleAddPost} current={usersData.current} />
       <Feed
         data={feedData}
         deletePost={handleDeletePost}

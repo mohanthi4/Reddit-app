@@ -6,27 +6,28 @@ type AddPosts = {
   addPost: (content: PostData) => void;
 };
 
-const getPostInfo = (e, userName) => {
+const getPostInfo = (e, userName, current) => {
   const user = userName;
   const formData = new FormData(e.target);
   const title = formData.get("title")?.toString();
   const description = formData.get("description")?.toString();
   const date = new Date().toString();
-  return { user, title, description, date };
+  return { user, userId: current, title, description, date };
 };
 
-export const FormCreation = ({ addPost }: AddPosts) => {
+export const FormCreation = ({ addPost, current }: AddPosts) => {
   const userName = useContext(UserContext);
   const handleAddPost = (e) => {
     e.preventDefault();
-    const posts = getPostInfo(e, userName);
+    const posts = getPostInfo(e, userName, current);
     fetch("http://localhost:8080/post/addPost", {
       method: "post",
       body: JSON.stringify(posts),
-      credentials:"include"
+      credentials: "include",
     })
       .then((x) => x.json())
       .catch((e) => console.log(e));
+    console.log(posts, "adding");
     addPost(posts);
   };
 
