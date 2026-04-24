@@ -3,9 +3,10 @@ import { FormCreation } from "./form-creation.tsx";
 import { formReducer, type PostData } from "./reducers/form-reducer.tsx";
 import { useReducer, useState, useEffect } from "react";
 import { SearchLabel } from "./search-label.tsx";
+import { subscribersReduce } from "./reducers/search-reducer.tsx";
 
 export const Home = () => {
-  const [feedData, dispatch] = useReducer(formReducer, {
+  const [feedData, dispatchFeed] = useReducer(formReducer, {
     nextId: 1,
     posts: [],
   });
@@ -16,7 +17,7 @@ export const Home = () => {
       .then((data) => data.json())
       .then((data) => {
         console.log("in fetch", data);
-        dispatch({ type: "init-posts", content: data });
+        dispatchFeed({ type: "init-posts", content: data });
       });
   }, []);
 
@@ -57,20 +58,36 @@ export const Home = () => {
   //     },
   //   ],
   // };
+  const [usersData, dispatch] = useReducer(subscribersReduce, {
+    all: [],
+    current: 0,
+  });
+
+  useEffect(() => {
+    fetch("http://localhost:8080/get/subscribers", { credentials: "include" })
+      .then((data) => data.json())
+      .then((data) => {
+        dispatch({ type: "init-subscribers", content: data });
+      });
+  }, []);
 
   const handleAddPost = (content: PostData) => {
-    dispatch({ type: "add-post", content });
+    dispatchFeed({ type: "add-post", content });
   };
 
   const handleDeletePost = (id: number) => {
-    dispatch({ type: "delete-post", content: id });
+    dispatchFeed({ type: "delete-post", content: id });
   };
 
   return (
     <div className="form">
-      {/* <SearchLabel /> */}
+      <SearchLabel usersData={usersData.all} />
       <FormCreation addPost={handleAddPost} />
-      <Feed data={feedData} deletePost={handleDeletePost} />
+      <Feed
+        data={feedData}
+        deletePost={handleDeletePost}
+        usersData={usersData}
+      />
     </div>
   );
 };

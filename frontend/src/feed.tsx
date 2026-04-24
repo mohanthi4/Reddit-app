@@ -62,8 +62,12 @@ type FeedProps = {
   deletePost: (id: number) => void;
 };
 
-export const Feed = ({ data, deletePost }: FeedProps) => {
-  const channelsFeed = { myId: 1, subscribers: [2, 3] };
+export const Feed = ({ data, deletePost, usersData }: FeedProps) => {
+  console.log(usersData, "every full");
+  const feed = usersData.all.filter((x) => x.isSubscribe);
+  const data1 = feed.map((x) => x.id);
+  console.log("usersData", data1, "myid", usersData.current);
+  const channelsFeed = { myId: usersData.current, subscribers: data1 };
   const posts = data.posts.filter((x) => {
     return (
       x.userId === channelsFeed.myId ||

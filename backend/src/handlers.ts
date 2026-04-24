@@ -5,18 +5,13 @@ type honoHandler = (data: Context) => Promise<Response>;
 
 export const serveFeedInfo: honoHandler = async (c) => {
   const user_id = getCookie(c, "user_id");
-  // const user_id = 2;
   if (user_id) {
     const readit = c.get("postsClass");
     const users = c.get("usersClass");
     const userId = parseInt(user_id);
     const ids = await users.userSubcribres(userId);
     ids.push(userId);
-    console.log(ids, "ids", userId);
-    // const data = await readit.getPosts(userId);
     const content = await readit.getAllPosts(ids);
-
-    console.log(content, "data before map");
     const finalData = {};
     finalData.posts = await Promise.all(
       content.posts.map(async (ele) => {
@@ -90,5 +85,5 @@ export const serveSubcribers = async (c) => {
   const allUsers = await users.getAllUsers(userId);
   const subscribers = await users.userSubcribres(userId);
   const finalData = getUsersValidData(allUsers, subscribers);
-  return c.json(finalData);
+  return c.json({ all: finalData, current: userId });
 };

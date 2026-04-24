@@ -18,23 +18,13 @@ const SearchList = ({ searchList }) => {
   );
 };
 
-export const SearchLabel = () => {
+export const SearchLabel = ({ usersData }) => {
   const [searchData, setSearchData] = useState([]);
-  const [usersData, dispatch] = useReducer(subscribersReduce, []);
-
-  useEffect(() => {
-    fetch("http://localhost:8080/get/subscribers", { credentials: "include" })
-      .then((data) => data.json())
-      .then((data) => {
-        dispatch({ type: "init-subscribers", content: data });
-      });
-  }, []);
 
   const handleSearch = (e) => {
     const value = e.target.value;
     if (value) {
       const lists = usersData.filter((x) => x.user.includes(value));
-      console.log(usersData);
       setSearchData(lists);
     } else {
       setSearchData([]);
