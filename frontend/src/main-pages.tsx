@@ -9,22 +9,16 @@ export const Home = () => {
     nextId: 1,
     posts: [],
   });
+  console.log("in feed");
 
-  const handleAddPost = (content: PostData) => {
-    dispatch({ type: "add-post", content });
-  };
-
-  const handleDeletePost = (id: number) => {
-    dispatch({ type: "delete-post", content: id });
-  };
-
-  // useEffect(() => {
-  //   fetch("http://localhost:8080/get/feedInfo", { credentials: "include" })
-  //     .then((data) => data.json())
-  //     .then((data) => {
-  //       dispatch({ type: "init-posts", content: data });
-  //     });
-  // }, []);
+  useEffect(() => {
+    fetch("http://localhost:8080/get/feedInfo", { credentials: "include" })
+      .then((data) => data.json())
+      .then((data) => {
+        console.log("in fetch", data);
+        dispatch({ type: "init-posts", content: data });
+      });
+  }, []);
 
   // const feedData = {
   //   nextId: 5,
@@ -64,9 +58,17 @@ export const Home = () => {
   //   ],
   // };
 
+  const handleAddPost = (content: PostData) => {
+    dispatch({ type: "add-post", content });
+  };
+
+  const handleDeletePost = (id: number) => {
+    dispatch({ type: "delete-post", content: id });
+  };
+
   return (
     <div className="form">
-      <SearchLabel />
+      {/* <SearchLabel /> */}
       <FormCreation addPost={handleAddPost} />
       <Feed data={feedData} deletePost={handleDeletePost} />
     </div>

@@ -32,7 +32,7 @@ export default class Readit {
   async getAllPosts(Ids) {
     const data = await this.#posts.find({ userId: { $in: [...Ids] } })
       .toArray();
-    console.log(data, "posts");
+    console.log(data, "posts in get");
     return { posts: data, nextId: this.#nextId };
   }
 }

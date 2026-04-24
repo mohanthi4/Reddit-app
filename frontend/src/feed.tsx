@@ -63,13 +63,15 @@ type FeedProps = {
 };
 
 export const Feed = ({ data, deletePost }: FeedProps) => {
-  const channelsFeed = { myId: 1, subscribers: [2] };
+  const channelsFeed = { myId: 1, subscribers: [2, 3] };
   const posts = data.posts.filter((x) => {
     return (
       x.userId === channelsFeed.myId ||
       channelsFeed.subscribers.includes(x.userId)
     );
   });
+  console.log(data, "this all");
+
   return (
     <div className="feed posts">
       <h1>Feed</h1>

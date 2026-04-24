@@ -4,21 +4,33 @@ import { getCookie, setCookie } from "hono/cookie";
 type honoHandler = (data: Context) => Promise<Response>;
 
 export const serveFeedInfo: honoHandler = async (c) => {
-  // const user_id = getCookie(c, "user_id");
-  const user_id = 2;
+  const user_id = getCookie(c, "user_id");
+  // const user_id = 2;
   if (user_id) {
     const readit = c.get("postsClass");
     const users = c.get("usersClass");
     const userId = parseInt(user_id);
     const ids = await users.userSubcribres(userId);
     ids.push(userId);
-    console.log(ids, "ids");
+    console.log(ids, "ids", userId);
     // const data = await readit.getPosts(userId);
-    const data = await readit.getAllPosts(ids);
-    const userName = await users.getUserName(userId);
-    data.posts.map((ele) => ele.user = userName);
-    data.posts.reverse();
-    return c.json(data);
+    const content = await readit.getAllPosts(ids);
+
+    console.log(content, "data before map");
+    const finalData = {};
+    finalData.posts = await Promise.all(
+      content.posts.map(async (ele) => {
+        const userName = await users.getUserName(ele.userId);
+        return {
+          ...ele,
+          user: userName,
+        };
+      }),
+    );
+    finalData.nextId = content.nextId;
+    console.log(finalData, "after map");
+    finalData.posts.reverse();
+    return c.json(finalData);
   }
 };
 

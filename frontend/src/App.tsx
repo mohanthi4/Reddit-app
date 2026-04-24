@@ -11,7 +11,6 @@ const App = () => {
     status: false,
     user: "",
   });
-
   useEffect(() => {
     fetch("http://localhost:8080/get/checkUser", { credentials: "include" })
       .then((data) => data.json())
@@ -23,6 +22,7 @@ const App = () => {
   const handleUsersLogin = (content: string) => {
     dispatch({ type: "user-login", content });
   };
+  console.log(loginInfo, "in main");
   return (
     <>
       {loginInfo.status ? (
