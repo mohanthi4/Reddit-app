@@ -118,3 +118,7 @@ textarea{
 .likes{
 width:50px;
 }
+.like-true{
+  color:rgb(73, 160, 248);
+  border-color:rgb(40, 144, 248) ;
+}

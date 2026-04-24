@@ -15,12 +15,21 @@ interface UsersSchema {
   subscribers: number[];
 }
 
+interface PostLikes {
+  _id: number;
+  likes: number;
+  likedUsers: number[];
+}
+
 export const createClient = async () => {
   const client = new MongoClient("mongodb://127.0.0.1:27017");
   await client.connect();
   const db = client.db("readit");
   const userData = db.collection<PostsSchema>("users-data");
   const postData = db.collection<UsersSchema>("feed-info");
+  const postLikes = db.collection<PostLikes>("post-likes");
+  // const data = { _id: 1, likes: 2, likedUsers: [1, 3] };
+  // await postLikes.insertOne(data);
   const postLength = await postData.find({}).toArray().then((data) => {
     if (data.length === 0) {
       return 1;
@@ -34,8 +43,16 @@ export const createClient = async () => {
     return data[data.length - 1]._id + 1;
   });
 
+  const postLikesLength = await postLikes.find({}).toArray().then((data) => {
+    if (data.length === 0) {
+      return 1;
+    }
+    return data[data.length - 1]._id + 1;
+  });
+
   return {
     postInfo: { postData, length: postLength },
     userInfo: { userData, length: userLength },
+    postLikesInfo: { postLikes, length: postLikesLength },
   };
 };
