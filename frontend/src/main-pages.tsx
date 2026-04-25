@@ -6,47 +6,61 @@ import { SearchLabel } from "./search-label.tsx";
 import { subscribersReduce } from "./reducers/search-reducer.tsx";
 import * as api from "./api.tsx";
 
-export const Home = () => {
+const usePosts = () => {
   const [feedData, dispatchFeed] = useReducer(formReducer, {
     nextId: 1,
     posts: [],
   });
 
+  const postActions = {
+    initPosts: (content) => dispatchFeed({ type: "init-posts", content }),
+    addPost: (content) => dispatchFeed({ type: "add-post", content }),
+    deletePost: (content) => dispatchFeed({ type: "delete-post", content }),
+    likePost: (content) => dispatchFeed({ type: "like-post", content }),
+    unLikePost: (content) => dispatchFeed({ type: "unlike-post", content }),
+  };
+
+  return { feedData, postActions };
+};
+
+const useUsers = () => {
   const [usersData, dispatch] = useReducer(subscribersReduce, {
     all: [],
     current: 0,
   });
 
-  useEffect(() => {
-    api.getFeed(dispatchFeed);
-    api.getSubscribers(dispatch);
-  }, []);
-
-  const postDispatch = (type) => (content) => {
-    console.log("in dispatch", content);
-    dispatchFeed({ type, content });
+  const userActions = {
+    initSubcribers: (content) =>
+      dispatch({ type: "init-subscribers", content }),
+    subscribe: (content) => dispatch({ type: "add-subscriber", content }),
   };
-  const userDispatch = (type) => (content) => dispatch({ type, content });
 
-  const handleSubscribeUser = userDispatch("add-subscriber");
-  const handleAddPost = postDispatch("add-post");
-  const handleDeletePost = postDispatch("delete-post");
-  const handleLikePost = postDispatch("like-post");
-  const handleUnlikePost = postDispatch("unlike-post");
+  return { usersData, userActions };
+};
+
+export const Home = () => {
+  const { feedData, postActions } = usePosts();
+  const { usersData, userActions } = useUsers();
+
+  useEffect(() => {
+    api.getFeed(postActions.initPosts);
+    api.getSubscribers(userActions.initSubcribers);
+  }, []);
 
   return (
     <div className="form">
       <SearchLabel
         usersData={usersData.all}
-        handleSubscribeUser={handleSubscribeUser}
+        handleSubscribeUser={userActions.subscribe}
       />
-      <FormCreation addPost={handleAddPost} current={usersData.current} />
+      <FormCreation addPost={postActions.addPost} current={usersData.current} />
       <Feed
         data={feedData}
         usersData={usersData}
-        deletePost={handleDeletePost}
-        handleLikePost={handleLikePost}
-        handleUnlikePost={handleUnlikePost}
+        actions={postActions}
+        deletePost={postActions.deletePost}
+        handleLikePost={postActions.likePost}
+        handleUnlikePost={postActions.unLikePost}
       />
     </div>
   );

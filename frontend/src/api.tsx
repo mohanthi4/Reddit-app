@@ -2,7 +2,7 @@ export const getFeed = (dispatchFeed) => {
   fetch("http://localhost:8080/get/feedInfo", { credentials: "include" })
     .then((data) => data.json())
     .then((data) => {
-      dispatchFeed({ type: "init-posts", content: data });
+      dispatchFeed(data);
     });
 };
 
@@ -10,7 +10,7 @@ export const getSubscribers = (dispatch) => {
   fetch("http://localhost:8080/get/subscribers", { credentials: "include" })
     .then((data) => data.json())
     .then((data) => {
-      dispatch({ type: "init-subscribers", content: data });
+      dispatch(data);
     });
 };
 
@@ -43,7 +43,7 @@ export const checkUserLogin = (dispatch) => {
     });
 };
 
-export const addingPost = (addPost, body) => {
+export const addingPost = (body) => {
   fetch("http://localhost:8080/post/addPost", {
     method: "post",
     body: JSON.stringify(body),
@@ -53,7 +53,7 @@ export const addingPost = (addPost, body) => {
     .catch((e) => console.log(e));
 };
 
-export const deletion = (deletePost, id) => {
+export const deletion = (id) => {
   fetch("http://localhost:8080/post/deletePost", {
     method: "post",
     body: JSON.stringify(id),
@@ -62,7 +62,7 @@ export const deletion = (deletePost, id) => {
     .catch((e) => console.error(e));
 };
 
-export const likePost = (handleLikePost, id) => {
+export const likePost = (id) => {
   fetch("http://localhost:8080/post/addLike", {
     method: "post",
     body: JSON.stringify(id),
@@ -72,7 +72,7 @@ export const likePost = (handleLikePost, id) => {
     .catch((e) => console.error(e));
 };
 
-export const unLikePost = (handleUnlikePost, id) => {
+export const unLikePost = (id) => {
   fetch("http://localhost:8080/post/unLike", {
     method: "post",
     body: JSON.stringify(id),

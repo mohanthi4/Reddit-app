@@ -6,6 +6,7 @@ const SearchList = ({ searchList, handleSubscribeUser }) => {
     api.addSubscriber(id);
     handleSubscribeUser(id);
   };
+
   return (
     <ul className="lists">
       {searchList.map((s) => (
@@ -26,31 +27,29 @@ const SearchList = ({ searchList, handleSubscribeUser }) => {
   );
 };
 
+const getFilteredUsers = (usersData, value) =>
+  value ? usersData.filter((x) => x.user.includes(value)) : [];
+
 export const SearchLabel = ({ usersData, handleSubscribeUser }) => {
   const [searchData, setSearchData] = useState([]);
 
   const handleSearch = (e) => {
     const value = e.target.value;
-    if (value) {
-      const lists = usersData.filter((x) => x.user.includes(value));
-      setSearchData(lists);
-    } else {
-      setSearchData([]);
-    }
+    const lists = getFilteredUsers(usersData, value);
+    setSearchData(lists);
   };
+
   return (
     <div className="search posts">
       <label>
         <h2>Search Users</h2>
       </label>
       <input type="text" onChange={handleSearch} />
-      {searchData.length > 0 ? (
+      {searchData.length > 0 && (
         <SearchList
           searchList={searchData}
           handleSubscribeUser={handleSubscribeUser}
         />
-      ) : (
-        <p></p>
       )}
       <button className="button-search">Search</button>
     </div>

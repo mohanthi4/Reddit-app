@@ -5,93 +5,92 @@ import {
 } from "./reducers/form-reducer.tsx";
 import * as api from "./api.tsx";
 
-const PostArticle = ({
-  id,
-  userId,
-  user,
-  date,
-  title,
-  description,
-  likes,
-  likedUsers,
-  deletePost,
-  currentUser,
-  handleLikePost,
-  handleUnlikePost,
-}) => {
-  const handleDeletePost = (e, id) => {
-    e.preventDefault();
-    deletePost(id);
-    api.deletion(deletePost, id);
-  };
-
-  const handleLike = (e, id) => {
-    const content = { id, currentUser };
-    handleLikePost(content);
-    api.likePost(handleLikePost, id);
-  };
-
-  const handleUnlike = (e, id) => {
-    const content = { id, currentUser };
-    handleUnlikePost(content);
-    api.unLikePost(handleUnlikePost, id);
-  };
-
-  const isLiked = likedUsers.includes(currentUser);
-  return (
-    <article className="posts-article">
-      <h2>
-        {currentUser === userId ? (
-          <>
-            {user}
-            <span className="my-user">You</span>
-          </>
-        ) : (
-          user
-        )}
-      </h2>
-      <p className="date">{date.toString()}</p>
-      <div className="PostData">
-        <h3>{title}</h3>
-        <p>{description}</p>
-      </div>
-      {currentUser === userId ? (
-        <button
-          className="button-action"
-          onClick={(e) => {
-            handleDeletePost(e, id);
-          }}
-        >
-          Delete
-        </button>
-      ) : (
-        <></>
-      )}
-      <button
-        className={`likes ${isLiked ? "like-true" : "unlike"}`}
-        onClick={(e) => {
-          if (!isLiked) handleLike(e, id);
-          else handleUnlike(e, id);
-        }}
-      >
-        Liked {likes}
-      </button>
-    </article>
-  );
-};
-
 type FeedProps = {
   data: FeedData;
   deletePost: (id: number) => void;
 };
 
-export const Feed = ({
-  data,
-  deletePost,
-  usersData,
-  handleLikePost,
-  handleUnlikePost,
-}: FeedProps) => {
+const UserHeader = ({ user, currentUser, userId }) => (
+  <h2>
+    {currentUser === userId ? (
+      <>
+        {user}
+        <span className="my-user">You</span>
+      </>
+    ) : (
+      user
+    )}
+  </h2>
+);
+
+const LikeButton = ({ isLiked, likes, onLike, onUnlike }) => (
+  <button
+    className={`likes ${isLiked ? "like-true" : "unlike"}`}
+    onClick={isLiked ? onUnlike : onLike}
+  >
+    Liked {likes}
+  </button>
+);
+
+const PostArticle = ({ post, currentUser, actions }) => {
+  const {
+    _id: id,
+    userId,
+    user,
+    date,
+    title,
+    description,
+    likes,
+    likedUsers,
+  } = post;
+  const handleDeletePost = (e) => {
+    e.preventDefault();
+    actions.deletePost(id);
+    api.deletion(id);
+  };
+
+  const handleLike = (e) => {
+    const content = { id, currentUser };
+    actions.likePost(content);
+    api.likePost(id);
+  };
+
+  const handleUnlike = (e) => {
+    const content = { id, currentUser };
+    actions.unLikePost(content);
+    api.unLikePost(id);
+  };
+
+  const isLiked = likedUsers.includes(currentUser);
+  return (
+    <article className="posts-article">
+      <UserHeader user={user} currentUser={currentUser} userId={userId} />
+      <p className="date">{date.toString()}</p>
+      <div className="PostData">
+        <h3>{title}</h3>
+        <p>{description}</p>
+      </div>
+      {currentUser === userId && (
+        <button
+          className="button-action"
+          onClick={(e) => {
+            handleDeletePost(e);
+          }}
+        >
+          Delete
+        </button>
+      )}
+      <LikeButton
+        isLiked={isLiked}
+        likes={likes}
+        onLike={handleLike}
+        onUnlike={handleUnlike}
+      />
+    </article>
+  );
+};
+
+export const Feed = ({ data, usersData, actions }: FeedProps) => {
   const feed = usersData.all.filter((x) => x.isSubscribe);
   const data1 = feed.map((x) => x.id);
   const channelsFeed = { myId: usersData.current, subscribers: data1 };
@@ -110,18 +109,9 @@ export const Feed = ({
           posts.map((f) => (
             <PostArticle
               key={f._id}
-              id={f._id}
-              userId={f.userId}
-              user={f.user}
-              date={f.date}
-              description={f.description}
-              title={f.title}
-              likes={f.likes}
-              likedUsers={f.likedUsers}
-              deletePost={deletePost}
-              handleLikePost={handleLikePost}
+              post={f}
               currentUser={channelsFeed.myId}
-              handleUnlikePost={handleUnlikePost}
+              actions={actions}
             />
           ))
         ) : (

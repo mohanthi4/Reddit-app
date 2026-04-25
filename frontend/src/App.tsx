@@ -18,7 +18,7 @@ const App = () => {
   }, []);
 
   const handleUsersLogin = (content: string) => {
-    dispatch({ type: "user-login", content });
+    dispatch({ type: "init-login", content });
   };
 
   return (

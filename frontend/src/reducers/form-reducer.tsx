@@ -20,17 +20,37 @@ export type FormReducer = (
   action: ReducerData,
 ) => FeedData | undefined;
 
+const likesPost = (draft, action) => {
+  const post = draft.posts.find((p) => p._id === action.content.id);
+  if (!post) return;
+  if (post && !post.likedUsers.includes(action.content.currentUser)) {
+    post.likedUsers.push(action.content.currentUser);
+    post.likes++;
+  }
+};
+
+const unLikesPost = (draft, action) => {
+  const post = draft.posts.find((p) => p._id === action.content.id);
+  if (!post) return;
+  post.likedUsers = post.likedUsers.filter(
+    (u) => u !== action.content.currentUser,
+  );
+  post.likes -= 1;
+};
+
+const addsPost = (draft, action) => {
+  const newPost = {
+    ...action.content,
+    _id: draft.nextId,
+  };
+  draft.nextId++;
+  draft.posts.unshift(newPost);
+};
+
 export const formReducer: FormReducer = (feedData, action) => {
   switch (action.type) {
     case "add-post": {
-      return produce(feedData, (draft) => {
-        const newPost = {
-          ...action.content,
-          _id: draft.nextId,
-        };
-        draft.nextId++;
-        draft.posts.unshift(newPost);
-      });
+      return produce(feedData, (draft) => addsPost(draft, action));
     }
 
     case "delete-post": {
@@ -44,23 +64,9 @@ export const formReducer: FormReducer = (feedData, action) => {
     }
 
     case "like-post":
-      return produce(feedData, (draft) => {
-        const post = draft.posts.find((p) => p._id === action.content.id);
-        if (!post) return;
-        if (post && !post.likedUsers.includes(action.content.currentUser)) {
-          post.likedUsers.push(action.content.currentUser);
-          post.likes++;
-        }
-      });
+      return produce(feedData, (draft) => likesPost(draft, action));
 
     case "unlike-post":
-      return produce(feedData, (draft) => {
-        const post = draft.posts.find((p) => p._id === action.content.id);
-        if (!post) return;
-        post.likedUsers = post.likedUsers.filter(
-          (u) => u !== action.content.currentUser,
-        );
-        post.likes -= 1;
-      });
+      return produce(feedData, (draft) => unLikesPost(draft, action));
   }
 };

@@ -24,7 +24,7 @@ export const FormCreation = ({ addPost, current }: AddPosts) => {
     e.preventDefault();
     const posts = getPostInfo(e, userName, current);
     addPost(posts);
-    api.addingPost(addPost, posts);
+    api.addingPost(posts);
   };
 
   return (
