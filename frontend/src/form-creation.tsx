@@ -2,6 +2,7 @@ import "./form.css";
 import { useContext } from "react";
 import { UserContext } from "./App.tsx";
 import * as api from "./api.tsx";
+import { format } from "date-fns";
 
 type AddPosts = {
   addPost: (content: PostData) => void;
@@ -12,7 +13,7 @@ const getPostInfo = (e, userName, current) => {
   const formData = new FormData(e.target);
   const title = formData.get("title")?.toString();
   const description = formData.get("description")?.toString();
-  const date = new Date().toString();
+  const date = format(new Date(), "MMMM d, yyyy '-' h:mm a");
   const likes = 0;
   const likedUsers = [];
   return { user, userId: current, title, description, date, likes, likedUsers };

@@ -71,6 +71,13 @@ export const serveAddSubscriber = async (c) => {
   return c.json(finalData);
 };
 
+export const serveUnSubscribe = async (c) => {
+  const { userId, users } = getClassAndCookie(c);
+  const id = await c.req.json();
+  const finalData = users.unSubscribe(userId, id);
+  return c.json(finalData);
+};
+
 export const serveAddLike = async (c) => {
   const { userId, readit } = getClassAndCookie(c);
   const id = await c.req.json();

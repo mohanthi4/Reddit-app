@@ -36,4 +36,15 @@ export default class User {
 
     return updatedUser;
   }
+
+  async unSubscribe(Id, id) {
+    await this.#users.updateOne(
+      { _id: +Id },
+      { $pull: { subscribers: +id } },
+    );
+
+    const updatedUser = await this.#users.findOne({ _id: +Id });
+
+    return updatedUser;
+  }
 }

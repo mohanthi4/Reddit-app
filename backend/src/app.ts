@@ -12,6 +12,7 @@ import {
   serveLoginUser,
   serveSubcribers,
   serveUnLike,
+  serveUnSubscribe,
 } from "./handlers.ts";
 import User from "./user.ts";
 
@@ -34,6 +35,7 @@ export const CreateApp = (
   app.post("/post/addLike", serveAddLike);
   app.post("/post/unLike", serveUnLike);
   app.post("/post/addSubscriber", serveAddSubscriber);
+  app.post("/post/unSubscriber", serveUnSubscribe);
   app.post("/post/loginUser", serveLoginUser);
   app.post("/post/addPost", serveAddPost);
   app.post("/post/deletePost", serveDeletePost);

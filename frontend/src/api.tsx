@@ -91,3 +91,13 @@ export const addSubscriber = (id) => {
     .then((x) => x.json())
     .catch((e) => console.error(e));
 };
+
+export const UnSubscriber = (id) => {
+  fetch("http://localhost:8080/post/unSubscriber", {
+    method: "post",
+    body: JSON.stringify(id),
+    credentials: "include",
+  })
+    .then((x) => x.json())
+    .catch((e) => console.error(e));
+};

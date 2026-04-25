@@ -33,6 +33,7 @@ const useUsers = () => {
     initSubcribers: (content) =>
       dispatch({ type: "init-subscribers", content }),
     subscribe: (content) => dispatch({ type: "add-subscriber", content }),
+    unSubscribe: (content) => dispatch({ type: "unSubscribe", content }),
   };
 
   return { usersData, userActions };
@@ -52,6 +53,7 @@ export const Home = () => {
       <SearchLabel
         usersData={usersData.all}
         handleSubscribeUser={userActions.subscribe}
+        handleUnSubscribeUser={userActions.unSubscribe}
       />
       <FormCreation addPost={postActions.addPost} current={usersData.current} />
       <Feed data={feedData} usersData={usersData} actions={postActions} />
