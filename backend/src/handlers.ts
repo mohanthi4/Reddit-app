@@ -45,7 +45,6 @@ export const serveAddPost: honoHandler = async (c) => {
     user,
   };
   const data = await readit.addPost(finalData);
-  console.log(data);
   return c.json(data);
 };
 

@@ -23,8 +23,8 @@ export const FormCreation = ({ addPost, current }: AddPosts) => {
   const handleAddPost = (e) => {
     e.preventDefault();
     const posts = getPostInfo(e, userName, current);
-    api.FetchAddPost(addPost, posts);
     addPost(posts);
+    api.addingPost(addPost, posts);
   };
 
   return (

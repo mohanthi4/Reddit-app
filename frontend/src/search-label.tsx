@@ -1,14 +1,9 @@
 import { useReducer, useState, useEffect } from "react";
+import * as api from "./api.tsx";
 
 const SearchList = ({ searchList, handleSubscribeUser }) => {
   const handleSubscribe = (e, id) => {
-    fetch("http://localhost:8080/post/addSubscriber", {
-      method: "post",
-      body: JSON.stringify(id),
-      credentials: "include",
-    })
-      .then((x) => x.json())
-      .catch((e) => console.error(e));
+    api.addSubscriber(id);
     handleSubscribeUser(id);
   };
   return (

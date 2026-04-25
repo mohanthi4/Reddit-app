@@ -3,6 +3,7 @@ import {
   type FeedData,
   type PostData,
 } from "./reducers/form-reducer.tsx";
+import * as api from "./api.tsx";
 
 const PostArticle = ({
   id,
@@ -20,44 +21,20 @@ const PostArticle = ({
 }) => {
   const handleDeletePost = (e, id) => {
     e.preventDefault();
-    fetch("http://localhost:8080/post/deletePost", {
-      method: "post",
-      body: JSON.stringify(id),
-    })
-      .then((x) => x.json())
-      .catch((e) => console.error(e));
-    console.log("deletion", id);
     deletePost(id);
+    api.deletion(deletePost, id);
   };
 
   const handleLike = (e, id) => {
     const content = { id, currentUser };
-    fetch("http://localhost:8080/post/addLike", {
-      method: "post",
-      body: JSON.stringify(id),
-      credentials: "include",
-    })
-      .then((x) => x.json())
-      .then((content) => {
-        console.log("--> like", content);
-        handleLikePost(content);
-      })
-      .catch((e) => console.error(e));
+    handleLikePost(content);
+    api.likePost(handleLikePost, id);
   };
 
   const handleUnlike = (e, id) => {
     const content = { id, currentUser };
-    fetch("http://localhost:8080/post/unLike", {
-      method: "post",
-      body: JSON.stringify(id),
-      credentials: "include",
-    })
-      .then((x) => x.json())
-      .then((content) => {
-        console.log("--> unlike", content);
-        handleUnlikePost(content);
-      })
-      .catch((e) => console.error(e));
+    handleUnlikePost(content);
+    api.unLikePost(handleUnlikePost, id);
   };
 
   const isLiked = likedUsers.includes(currentUser);
@@ -154,36 +131,3 @@ export const Feed = ({
     </div>
   );
 };
-
-// const posts = [
-//   {
-//     _id: 1,
-//     userId: 1,
-//     user: "John",
-//     date: "23/12/2024",
-//     description: "1 desc",
-//     title: "1",
-//     likes: 2,
-//     likedUsers: [1, 3],
-//   },
-//   {
-//     _id: 2,
-//     userId: 1,
-//     user: "John",
-//     date: "23/11/2024",
-//     description: "2 desc",
-//     title: "2",
-//     likes: 3,
-//     likedUsers: [4, 2, 3],
-//   },
-//   {
-//     _id: 3,
-//     userId: 2,
-//     user: "Alex",
-//     date: "23/10/2024",
-//     description: "3 desc",
-//     title: "3",
-//     likes: 2,
-//     likedUsers: [1, 3],
-//   },
-// ];

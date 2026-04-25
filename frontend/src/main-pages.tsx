@@ -31,7 +31,7 @@ export const Home = () => {
   const handleSubscribeUser = userDispatch("add-subscriber");
   const handleAddPost = postDispatch("add-post");
   const handleDeletePost = postDispatch("delete-post");
-  const handleLikePost = postDispatch("add-like");
+  const handleLikePost = postDispatch("like-post");
   const handleUnlikePost = postDispatch("unlike-post");
 
   return (
@@ -59,7 +59,7 @@ export const Login = ({ handleUsersLogin }) => {
     const user = formData.get("user")?.toString();
     const password = formData.get("password")?.toString();
     const body = { user, password };
-    api.fetchUsersLogin(handleUsersLogin, body);
+    api.usersLogin(handleUsersLogin, body);
   };
 
   return (

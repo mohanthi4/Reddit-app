@@ -29,7 +29,6 @@ export const formReducer: FormReducer = (feedData, action) => {
           _id: draft.nextId,
         };
         draft.nextId++;
-
         draft.posts.unshift(newPost);
       });
     }
@@ -44,22 +43,24 @@ export const formReducer: FormReducer = (feedData, action) => {
       return produce(feedData, (draft) => action.content);
     }
 
-    case "add-like": {
+    case "like-post":
       return produce(feedData, (draft) => {
-        const feedIndex = draft.posts.findIndex(
-          (post) => post._id === action.content._id,
-        );
-        draft.posts[feedIndex] = action.content;
+        const post = draft.posts.find((p) => p._id === action.content.id);
+        if (!post) return;
+        if (post && !post.likedUsers.includes(action.content.currentUser)) {
+          post.likedUsers.push(action.content.currentUser);
+          post.likes++;
+        }
       });
-    }
 
-    case "unlike-post": {
+    case "unlike-post":
       return produce(feedData, (draft) => {
-        const feedIndex = draft.posts.findIndex(
-          (post) => post._id === action.content.id,
+        const post = draft.posts.find((p) => p._id === action.content.id);
+        if (!post) return;
+        post.likedUsers = post.likedUsers.filter(
+          (u) => u !== action.content.currentUser,
         );
-        draft.posts[feedIndex] = action.content;
+        post.likes -= 1;
       });
-    }
   }
 };
