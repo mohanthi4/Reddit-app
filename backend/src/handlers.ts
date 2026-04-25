@@ -1,48 +1,34 @@
 import { Context } from "hono";
-import { getCookie, setCookie } from "hono/cookie";
+import { setCookie } from "hono/cookie";
+import { getFinalPosts, getUsersValidData, UserIdCookie } from "./helpers.ts";
 
 type honoHandler = (data: Context) => Promise<Response>;
 
+const getClassAndCookie = (c) => {
+  return {
+    readit: c.get("postsClass"),
+    users: c.get("usersClass"),
+    userId: UserIdCookie(c),
+  };
+};
+
 export const serveFeedInfo: honoHandler = async (c) => {
-  const user_id = getCookie(c, "user_id");
-  if (user_id) {
-    const readit = c.get("postsClass");
-    const users = c.get("usersClass");
-    const userId = parseInt(user_id);
+  const { userId, readit, users } = getClassAndCookie(c);
+  if (userId) {
     const ids = await users.userSubcribres(userId);
     ids.push(userId);
     const content = await readit.getAllPosts(ids);
-    const finalData = {};
-    finalData.posts = await Promise.all(
-      content.posts.map(async (ele) => {
-        const userName = await users.getUserName(ele.userId);
-        return {
-          ...ele,
-          user: userName,
-        };
-      }),
-    );
-    finalData.nextId = content.nextId;
-    finalData.posts.reverse();
-    console.log(finalData);
-    return c.json(finalData);
+    const finalPosts = await getFinalPosts(content, users);
+    return c.json(finalPosts);
   }
 };
 
 export const serveAddPost: honoHandler = async (c) => {
   const readit = c.get("postsClass");
-  const user_id = getCookie(c, "user_id");
-  const userId = parseInt(user_id);
-  const { title, description, date, likes, likedUsers, user } = await c.req
-    .json();
+  const body = await c.req.json();
   const finalData = {
-    title,
-    description,
-    date,
-    userId,
-    likes,
-    likedUsers,
-    user,
+    userId: UserIdCookie(c),
+    ...body,
   };
   const data = await readit.addPost(finalData);
   return c.json(data);
@@ -56,12 +42,9 @@ export const serveDeletePost: honoHandler = async (c) => {
 };
 
 export const serveCheckUser = async (c) => {
-  const userId = getCookie(c, "user_id");
-  const users = c.get("usersClass");
+  const { userId, users } = getClassAndCookie(c);
   const user = await users.getUserName(userId);
-
   const { status } = userId ? { status: true } : { status: false };
-
   return c.json({ status, user });
 };
 
@@ -73,22 +56,8 @@ export const serveLoginUser = async (c) => {
   return c.json({ status, user });
 };
 
-const getUsersValidData = (users, subscribers) => {
-  return users.map((user) => {
-    const creator = user;
-    creator.isSubscribe = subscribers.includes(user._id);
-    return {
-      id: creator._id,
-      user: creator.user,
-      isSubscribe: creator.isSubscribe,
-    };
-  });
-};
-
 export const serveSubcribers = async (c) => {
-  const user_id = getCookie(c, "user_id");
-  const userId = parseInt(user_id);
-  const users = c.get("usersClass");
+  const { userId, users } = getClassAndCookie(c);
   const allUsers = await users.getAllUsers(userId);
   const subscribers = await users.userSubcribres(userId);
   const finalData = getUsersValidData(allUsers, subscribers);
@@ -96,32 +65,22 @@ export const serveSubcribers = async (c) => {
 };
 
 export const serveAddSubscriber = async (c) => {
-  const user_id = getCookie(c, "user_id");
-  const userId = parseInt(user_id);
-  const users = c.get("usersClass");
+  const { userId, users } = getClassAndCookie(c);
   const id = await c.req.json();
-
   const finalData = users.addSubscriber(userId, id);
   return c.json(finalData);
 };
 
 export const serveAddLike = async (c) => {
-  const user_id = getCookie(c, "user_id");
-  const userId = parseInt(user_id);
-  // const userId = 1;
-  const readit = c.get("postsClass");
+  const { userId, readit } = getClassAndCookie(c);
   const id = await c.req.json();
   const data = await readit.addLike(userId, id);
   return c.json(data);
 };
 
 export const serveUnLike = async (c) => {
-  const user_id = getCookie(c, "user_id");
-  const userId = parseInt(user_id);
-  // const userId = 1;
-  const readit = c.get("postsClass");
+  const { userId, readit } = getClassAndCookie(c);
   const id = await c.req.json();
-  // const id = 2;
   const data = await readit.unLike(userId, id);
   return c.json(data);
 };

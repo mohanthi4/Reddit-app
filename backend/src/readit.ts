@@ -22,7 +22,6 @@ export default class Readit {
   }
   async deletePost(id: number) {
     const data = await this.#posts.findOneAndDelete({ _id: id });
-    console.log(data, id);
     return data._id;
   }
 

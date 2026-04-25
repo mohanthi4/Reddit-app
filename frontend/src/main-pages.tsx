@@ -54,14 +54,7 @@ export const Home = () => {
         handleSubscribeUser={userActions.subscribe}
       />
       <FormCreation addPost={postActions.addPost} current={usersData.current} />
-      <Feed
-        data={feedData}
-        usersData={usersData}
-        actions={postActions}
-        deletePost={postActions.deletePost}
-        handleLikePost={postActions.likePost}
-        handleUnlikePost={postActions.unLikePost}
-      />
+      <Feed data={feedData} usersData={usersData} actions={postActions} />
     </div>
   );
 };

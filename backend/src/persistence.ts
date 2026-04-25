@@ -23,21 +23,20 @@ export const createClient = async () => {
   const db = client.db("readit");
   const postData = db.collection<PostsSchema>("feed-data");
   const userData = db.collection<UsersSchema>("users-data");
-  // await postData.deleteOne({ _id: 6 });
   const lastPost = await postData
     .find({})
     .sort({ _id: -1 })
     .limit(1)
     .toArray();
 
-  const postLength = lastPost.length === 0 ? 1 : lastPost[0]._id + 1;
+  const lastUser = await userData
+    .find({})
+    .sort({ _id: -1 })
+    .limit(1)
+    .toArray();
 
-  const userLength = await userData.find({}).toArray().then((data) => {
-    if (data.length === 0) {
-      return 1;
-    }
-    return data[data.length - 1]._id + 1;
-  });
+  const postLength = lastPost.length === 0 ? 1 : lastPost[0]._id + 1;
+  const userLength = lastUser.length === 0 ? 1 : lastUser[0]._id + 1;
 
   return {
     postInfo: { postData, length: postLength },
