@@ -4,6 +4,7 @@ import { formReducer, type PostData } from "./reducers/form-reducer.tsx";
 import { useReducer, useState, useEffect } from "react";
 import { SearchLabel } from "./search-label.tsx";
 import { subscribersReduce } from "./reducers/search-reducer.tsx";
+import * as api from "./api.tsx";
 
 export const Home = () => {
   const [feedData, dispatchFeed] = useReducer(formReducer, {
@@ -11,45 +12,27 @@ export const Home = () => {
     posts: [],
   });
 
-  useEffect(() => {
-    fetch("http://localhost:8080/get/feedInfo", { credentials: "include" })
-      .then((data) => data.json())
-      .then((data) => {
-        dispatchFeed({ type: "init-posts", content: data });
-      });
-  }, []);
-
   const [usersData, dispatch] = useReducer(subscribersReduce, {
     all: [],
     current: 0,
   });
 
   useEffect(() => {
-    fetch("http://localhost:8080/get/subscribers", { credentials: "include" })
-      .then((data) => data.json())
-      .then((data) => {
-        dispatch({ type: "init-subscribers", content: data });
-      });
+    api.getFeed(dispatchFeed);
+    api.getSubscribers(dispatch);
   }, []);
 
-  const handleSubscribeUser = (content) => {
-    dispatch({ type: "add-subscriber", content });
+  const postDispatch = (type) => (content) => {
+    console.log("in dispatch", content);
+    dispatchFeed({ type, content });
   };
+  const userDispatch = (type) => (content) => dispatch({ type, content });
 
-  const handleAddPost = (content: PostData) => {
-    dispatchFeed({ type: "add-post", content });
-  };
-
-  const handleDeletePost = (id: number) => {
-    dispatchFeed({ type: "delete-post", content: id });
-  };
-
-  const handleLikePost = (content) => {
-    dispatchFeed({ type: "add-like", content });
-  };
-  const handleUnlikePost = (content) => {
-    dispatchFeed({ type: "unlike-post", content });
-  };
+  const handleSubscribeUser = userDispatch("add-subscriber");
+  const handleAddPost = postDispatch("add-post");
+  const handleDeletePost = postDispatch("delete-post");
+  const handleLikePost = postDispatch("add-like");
+  const handleUnlikePost = postDispatch("unlike-post");
 
   return (
     <div className="form">
@@ -60,8 +43,8 @@ export const Home = () => {
       <FormCreation addPost={handleAddPost} current={usersData.current} />
       <Feed
         data={feedData}
-        deletePost={handleDeletePost}
         usersData={usersData}
+        deletePost={handleDeletePost}
         handleLikePost={handleLikePost}
         handleUnlikePost={handleUnlikePost}
       />
@@ -76,16 +59,7 @@ export const Login = ({ handleUsersLogin }) => {
     const user = formData.get("user")?.toString();
     const password = formData.get("password")?.toString();
     const body = { user, password };
-    fetch("http://localhost:8080/post/loginUser", {
-      method: "post",
-      body: JSON.stringify(body),
-      credentials: "include",
-    })
-      .then((x) => x.json())
-      .then((user) => {
-        handleUsersLogin(user);
-      })
-      .catch((e) => console.log(e));
+    api.fetchUsersLogin(handleUsersLogin, body);
   };
 
   return (
@@ -100,9 +74,4 @@ export const Login = ({ handleUsersLogin }) => {
       </form>
     </div>
   );
-};
-
-type LoginInfo = {
-  status: boolean;
-  user: string;
 };

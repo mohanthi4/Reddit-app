@@ -1,6 +1,7 @@
 import "./form.css";
 import { useContext } from "react";
 import { UserContext } from "./App.tsx";
+import * as api from "./api.tsx";
 
 type AddPosts = {
   addPost: (content: PostData) => void;
@@ -22,14 +23,8 @@ export const FormCreation = ({ addPost, current }: AddPosts) => {
   const handleAddPost = (e) => {
     e.preventDefault();
     const posts = getPostInfo(e, userName, current);
-    fetch("http://localhost:8080/post/addPost", {
-      method: "post",
-      body: JSON.stringify(posts),
-      credentials: "include",
-    })
-      .then((x) => x.json())
-      .then((posts) => addPost(posts))
-      .catch((e) => console.log(e));
+    api.FetchAddPost(addPost, posts);
+    addPost(posts);
   };
 
   return (

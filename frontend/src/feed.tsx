@@ -26,6 +26,7 @@ const PostArticle = ({
     })
       .then((x) => x.json())
       .catch((e) => console.error(e));
+    console.log("deletion", id);
     deletePost(id);
   };
 
@@ -38,6 +39,7 @@ const PostArticle = ({
     })
       .then((x) => x.json())
       .then((content) => {
+        console.log("--> like", content);
         handleLikePost(content);
       })
       .catch((e) => console.error(e));
@@ -52,12 +54,12 @@ const PostArticle = ({
     })
       .then((x) => x.json())
       .then((content) => {
+        console.log("--> unlike", content);
         handleUnlikePost(content);
       })
       .catch((e) => console.error(e));
   };
 
-  console.log(likedUsers, id);
   const isLiked = likedUsers.includes(currentUser);
   return (
     <article className="posts-article">

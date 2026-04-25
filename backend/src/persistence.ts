@@ -23,7 +23,7 @@ export const createClient = async () => {
   const db = client.db("readit");
   const postData = db.collection<PostsSchema>("feed-data");
   const userData = db.collection<UsersSchema>("users-data");
-  await postData.deleteOne({ _id: 6 });
+  // await postData.deleteOne({ _id: 6 });
   const lastPost = await postData
     .find({})
     .sort({ _id: -1 })

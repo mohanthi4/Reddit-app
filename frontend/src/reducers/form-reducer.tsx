@@ -24,16 +24,19 @@ export const formReducer: FormReducer = (feedData, action) => {
   switch (action.type) {
     case "add-post": {
       return produce(feedData, (draft) => {
-        draft.posts.unshift(action.content);
+        const newPost = {
+          ...action.content,
+          _id: draft.nextId,
+        };
+        draft.nextId++;
+
+        draft.posts.unshift(newPost);
       });
     }
 
     case "delete-post": {
       return produce(feedData, (draft) => {
-        const feedIndex = draft.posts.findIndex(
-          (post) => post._id === action.content,
-        );
-        draft.posts.splice(feedIndex, 1);
+        draft.posts = draft.posts.filter((post) => post._id !== action.content);
       });
     }
 

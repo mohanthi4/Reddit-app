@@ -20,9 +20,10 @@ export default class Readit {
     const content = await this.#posts.find().toArray();
     return content;
   }
-  async deletePost(_id: number) {
-    await this.#posts.deleteOne({ _id });
-    return { status: "success" };
+  async deletePost(id: number) {
+    const data = await this.#posts.findOneAndDelete({ _id: id });
+    console.log(data, id);
+    return data._id;
   }
 
   async getAllPosts(Ids) {

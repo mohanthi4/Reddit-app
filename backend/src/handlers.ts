@@ -39,10 +39,10 @@ export const serveAddPost: honoHandler = async (c) => {
     title,
     description,
     date,
+    userId,
     likes,
     likedUsers,
     user,
-    userId,
   };
   const data = await readit.addPost(finalData);
   console.log(data);
