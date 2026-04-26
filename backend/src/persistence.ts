@@ -13,7 +13,7 @@ interface PostsSchema {
 interface UsersSchema {
   _id: number;
   user: string;
-  password: string | number;
+  password?: string | number;
   subscribers: number[];
 }
 

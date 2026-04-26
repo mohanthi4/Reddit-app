@@ -7,7 +7,7 @@ export default class User {
   }
 
   async addUser(userInfo) {
-    userInfo._id = this.#nextId++;
+    this.#nextId++;
     userInfo.subscribers = [];
     await this.#users.insertOne(userInfo);
     return { status: true, user: userInfo.user, id: userInfo._id };

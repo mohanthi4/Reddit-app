@@ -21,15 +21,24 @@ const App = () => {
     dispatch({ type: "init-login", content });
   };
 
+  const handleLogin = (e) => {
+    window.location.href = "http://localhost:8080/get/handleAuthLogin";
+  };
+
   return (
     <>
-      {loginInfo.status ? (
-        <UserContext value={loginInfo.user}>
-          <Home />
-        </UserContext>
-      ) : (
-        <Login handleUsersLogin={handleUsersLogin} />
-      )}
+      {
+        loginInfo.status ? (
+          <UserContext value={loginInfo.user}>
+            <Home />
+          </UserContext>
+        ) : (
+          <button onClick={handleLogin}>Login</button>
+        )
+        //   (
+        //   <Login handleUsersLogin={handleUsersLogin} />
+        // )
+      }
     </>
   );
 };

@@ -9,7 +9,8 @@ import {
   serveCheckUser,
   serveDeletePost,
   serveFeedInfo,
-  serveLoginUser,
+  serveGithubIdentity,
+  serveServiceApi,
   serveSubcribers,
   serveUnLike,
   serveUnSubscribe,
@@ -29,6 +30,8 @@ export const CreateApp = (
     c.set("usersClass", userData);
     await next();
   });
+  app.get("/get/handleAuthLogin", serveGithubIdentity);
+  app.get("/auth", serveServiceApi);
   app.get("/get/feedInfo", serveFeedInfo);
   app.get("/get/checkUser", serveCheckUser);
   app.get("/get/subscribers", serveSubcribers);
@@ -36,7 +39,7 @@ export const CreateApp = (
   app.post("/post/unLike", serveUnLike);
   app.post("/post/addSubscriber", serveAddSubscriber);
   app.post("/post/unSubscriber", serveUnSubscribe);
-  app.post("/post/loginUser", serveLoginUser);
+  // app.post("/post/loginUser", setUserLogin);
   app.post("/post/addPost", serveAddPost);
   app.post("/post/deletePost", serveDeletePost);
   return app;

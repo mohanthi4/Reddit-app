@@ -1,6 +1,13 @@
 import { Context } from "hono";
 import { getCookie, setCookie } from "hono/cookie";
-import { getFinalPosts, getUsersValidData } from "./helpers.ts";
+import {
+  getFinalPosts,
+  getUsersValidData,
+  requestAccessToken,
+  requestProtectedResource,
+  setParams,
+  setUserLogin,
+} from "./helpers.ts";
 
 type honoHandler = (data: Context) => Promise<Response>;
 
@@ -98,4 +105,25 @@ export const serveUnLike = async (c) => {
   const id = await c.req.json();
   const data = await readit.unLike(userId, id);
   return c.json(data);
+};
+
+export const serveGithubIdentity = (c) => {
+  const url = new URL("https://github.com/login/oauth/authorize");
+  const clientId = Deno.env.get("AUTH_CLIENT_ID");
+  url.searchParams.set("client_id", clientId);
+  url.searchParams.set("scope", "user");
+  url.searchParams.set("redirect_uri", "http://localhost:8080/auth");
+  return c.redirect(url, 303);
+};
+
+export const serveServiceApi = async (c) => {
+  const code = c.req.query("code");
+  const clientId = Deno.env.get("AUTH_CLIENT_ID");
+  const clientSecret = Deno.env.get("AUTH_CLIENT_SECRET");
+  const body = setParams(clientId, clientSecret, code);
+  const access_token = await requestAccessToken(body);
+  const data = await requestProtectedResource(access_token);
+  const final = await setUserLogin(c, data);
+  console.log("helo");
+  return c.redirect("http://localhost:5173");
 };
