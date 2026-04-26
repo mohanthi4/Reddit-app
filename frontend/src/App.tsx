@@ -17,7 +17,7 @@ const App = () => {
     api.checkUserLogin(dispatch);
   }, []);
 
-  const handleUsersLogin = (content: string) => {
+  const handleUsersLogin = (content) => {
     dispatch({ type: "init-login", content });
   };
 

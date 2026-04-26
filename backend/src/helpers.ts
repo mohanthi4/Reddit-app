@@ -20,11 +20,6 @@ export const getFinalPosts = async (content, users) => {
   return finalData;
 };
 
-export const UserIdCookie = (c) => {
-  const user_id = getCookie(c, "user_id");
-  return parseInt(user_id);
-};
-
 export const getUsersValidData = (users, subscribers) => {
   return users.map((user) => {
     const creator = user;

@@ -1,15 +1,26 @@
+const responeByCheckingError = async (res) => {
+  if (!res.ok) {
+    const text = await res.text();
+    console.error("Server error:", text);
+    return null;
+  }
+  return res.json();
+};
+
 export const getFeed = (dispatchFeed) => {
   fetch("http://localhost:8080/get/feedInfo", { credentials: "include" })
-    .then((data) => data.json())
+    .then(responeByCheckingError)
     .then((data) => {
+      if (!data) return;
       dispatchFeed(data);
     });
 };
 
 export const getSubscribers = (dispatch) => {
   fetch("http://localhost:8080/get/subscribers", { credentials: "include" })
-    .then((data) => data.json())
+    .then(responeByCheckingError)
     .then((data) => {
+      if (!data) return;
       dispatch(data);
     });
 };
@@ -20,26 +31,20 @@ export const usersLogin = (handleUsersLogin, body) => {
     body: JSON.stringify(body),
     credentials: "include",
   })
-    .then(async (x) => {
-      if (!x.ok) {
-        const text = await x.text();
-        console.error("Server error:", text);
-        return null;
-      }
-      return x.json();
-    })
-    .then((user) => {
-      if (!user) return;
-      handleUsersLogin(user);
+    .then(responeByCheckingError)
+    .then((res) => {
+      if (!res) return;
+      handleUsersLogin(res);
     })
     .catch((e) => console.log(e));
 };
 
 export const checkUserLogin = (dispatch) => {
   fetch("http://localhost:8080/get/checkUser", { credentials: "include" })
-    .then((data) => data.json())
+    .then(responeByCheckingError)
     .then((data) => {
-      dispatch({ type: "init-user", content: data });
+      if (!data) return;
+      dispatch({ type: "init-login", content: data });
     });
 };
 
@@ -49,7 +54,7 @@ export const addingPost = (body) => {
     body: JSON.stringify(body),
     credentials: "include",
   })
-    .then((x) => x.json())
+    .then(responeByCheckingError)
     .catch((e) => console.log(e));
 };
 
@@ -58,7 +63,7 @@ export const deletion = (id) => {
     method: "post",
     body: JSON.stringify(id),
   })
-    .then((x) => x.json())
+    .then(responeByCheckingError)
     .catch((e) => console.error(e));
 };
 
@@ -68,7 +73,7 @@ export const likePost = (id) => {
     body: JSON.stringify(id),
     credentials: "include",
   })
-    .then((x) => x.json())
+    .then(responeByCheckingError)
     .catch((e) => console.error(e));
 };
 
@@ -78,7 +83,7 @@ export const unLikePost = (id) => {
     body: JSON.stringify(id),
     credentials: "include",
   })
-    .then((x) => x.json())
+    .then(responeByCheckingError)
     .catch((e) => console.error(e));
 };
 
@@ -88,7 +93,7 @@ export const addSubscriber = (id) => {
     body: JSON.stringify(id),
     credentials: "include",
   })
-    .then((x) => x.json())
+    .then(responeByCheckingError)
     .catch((e) => console.error(e));
 };
 
@@ -98,6 +103,6 @@ export const UnSubscriber = (id) => {
     body: JSON.stringify(id),
     credentials: "include",
   })
-    .then((x) => x.json())
+    .then(responeByCheckingError)
     .catch((e) => console.error(e));
 };

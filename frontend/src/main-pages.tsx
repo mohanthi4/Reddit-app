@@ -68,6 +68,7 @@ export const Login = ({ handleUsersLogin }) => {
     const user = formData.get("user")?.toString();
     const password = formData.get("password")?.toString();
     const body = { user, password };
+    const data = { status: true, user };
     api.usersLogin(handleUsersLogin, body);
   };
 

@@ -1,33 +1,35 @@
 import { Context } from "hono";
-import { setCookie } from "hono/cookie";
-import { getFinalPosts, getUsersValidData, UserIdCookie } from "./helpers.ts";
+import { getCookie, setCookie } from "hono/cookie";
+import { getFinalPosts, getUsersValidData } from "./helpers.ts";
 
 type honoHandler = (data: Context) => Promise<Response>;
 
 const getClassAndCookie = (c) => {
+  const user_id = getCookie(c, "user_id");
   return {
     readit: c.get("postsClass"),
     users: c.get("usersClass"),
-    userId: UserIdCookie(c),
+    userId: parseInt(user_id),
   };
 };
 
 export const serveFeedInfo: honoHandler = async (c) => {
   const { userId, readit, users } = getClassAndCookie(c);
-  if (userId) {
-    const ids = await users.userSubcribres(userId);
-    ids.push(userId);
-    const content = await readit.getAllPosts(ids);
-    const finalPosts = await getFinalPosts(content, users);
-    return c.json(finalPosts);
+  if (!userId) {
+    return c.json({ posts: [], nextId: 1 });
   }
+  const ids = await users.userSubcribres(userId);
+  ids.push(userId);
+  const content = await readit.getAllPosts(ids);
+  const finalPosts = await getFinalPosts(content, users);
+  return c.json(finalPosts);
 };
 
 export const serveAddPost: honoHandler = async (c) => {
-  const readit = c.get("postsClass");
+  const { readit, userId } = getClassAndCookie(c);
   const body = await c.req.json();
   const finalData = {
-    userId: UserIdCookie(c),
+    userId,
     ...body,
   };
   const data = await readit.addPost(finalData);
@@ -43,9 +45,11 @@ export const serveDeletePost: honoHandler = async (c) => {
 
 export const serveCheckUser = async (c) => {
   const { userId, users } = getClassAndCookie(c);
+  if (!userId) {
+    return c.json({ status: false, user: null });
+  }
   const user = await users.getUserName(userId);
-  const { status } = userId ? { status: true } : { status: false };
-  return c.json({ status, user });
+  return c.json({ status: true, user });
 };
 
 export const serveLoginUser = async (c) => {
@@ -53,11 +57,15 @@ export const serveLoginUser = async (c) => {
   const body = await c.req.json();
   const { status, user, id } = await users.addUser(body);
   setCookie(c, "user_id", id);
+  console.log(status, user);
   return c.json({ status, user });
 };
 
 export const serveSubcribers = async (c) => {
   const { userId, users } = getClassAndCookie(c);
+  if (!userId) {
+    return c.json({ all: [], current: 0 });
+  }
   const allUsers = await users.getAllUsers(userId);
   const subscribers = await users.userSubcribres(userId);
   const finalData = getUsersValidData(allUsers, subscribers);
