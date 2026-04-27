@@ -1,4 +1,4 @@
-import { setCookie } from "hono/cookie";
+import { getCookie, setCookie } from "hono/cookie";
 
 const attachUserToPosts = async (content, users) => {
   return await Promise.all(
@@ -53,16 +53,18 @@ export const requestProtectedResource = async (access_token) => {
     },
   });
   const { login, id } = await res2.json();
-  console.log("respone --> ", login, id);
   return { user: login, _id: id };
 };
 
 export const setUserLogin = async (c, body) => {
   const users = c.get("usersClass");
-  const { status, user, id } = await users.addUser(body);
-  setCookie(c, "user_id", id);
-  console.log(status, user);
-  return c.json({ status, user });
+  const isExist = await users.isUserExist(body._id);
+  let status = true;
+  if (!isExist) {
+    status = await users.addUser(body);
+  }
+  setCookie(c, "user_id", body._id);
+  return status;
 };
 
 export const setParams = (clientId, clientSecret, code) => {
@@ -71,4 +73,19 @@ export const setParams = (clientId, clientSecret, code) => {
   body.set("client_secret", clientSecret);
   body.set("code", code);
   return body;
+};
+
+export const getDenoEnv = () => {
+  const clientId = Deno.env.get("AUTH_CLIENT_ID");
+  const clientSecret = Deno.env.get("AUTH_CLIENT_SECRET");
+  return { clientId, clientSecret };
+};
+
+export const getClassAndCookie = (c) => {
+  const user_id = getCookie(c, "user_id");
+  return {
+    readit: c.get("postsClass"),
+    users: c.get("usersClass"),
+    userId: parseInt(user_id),
+  };
 };

@@ -10,7 +10,13 @@ export default class User {
     this.#nextId++;
     userInfo.subscribers = [];
     await this.#users.insertOne(userInfo);
-    return { status: true, user: userInfo.user, id: userInfo._id };
+    return { status: true, id: userInfo._id };
+  }
+
+  async isUserExist(Id) {
+    const data = await this.#users.find({ _id: Id }).toArray();
+    const status = data.length > 0;
+    return status;
   }
 
   async getUserName(Id) {
@@ -28,14 +34,20 @@ export default class User {
   }
 
   async addSubscriber(Id, id) {
-    await this.#users.updateOne(
-      { _id: +Id },
-      { $push: { subscribers: +id } },
-    );
+    let status = true;
+    try {
+      await this.#users.updateOne(
+        { _id: +Id },
+        { $push: { subscribers: +id } },
+      );
+    } catch (e) {
+      console.error(e.mesage);
+      status = false;
+    }
 
-    const updatedUser = await this.#users.findOne({ _id: +Id });
+    // const updatedUser = await this.#users.findOne({ _id: +Id });
 
-    return updatedUser;
+    return true;
   }
 
   async unSubscribe(Id, id) {

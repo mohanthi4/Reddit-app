@@ -1,6 +1,7 @@
 import { Context } from "hono";
-import { getCookie, setCookie } from "hono/cookie";
 import {
+  getClassAndCookie,
+  getDenoEnv,
   getFinalPosts,
   getUsersValidData,
   requestAccessToken,
@@ -10,15 +11,6 @@ import {
 } from "./helpers.ts";
 
 type honoHandler = (data: Context) => Promise<Response>;
-
-const getClassAndCookie = (c) => {
-  const user_id = getCookie(c, "user_id");
-  return {
-    readit: c.get("postsClass"),
-    users: c.get("usersClass"),
-    userId: parseInt(user_id),
-  };
-};
 
 export const serveFeedInfo: honoHandler = async (c) => {
   const { userId, readit, users } = getClassAndCookie(c);
@@ -57,15 +49,6 @@ export const serveCheckUser = async (c) => {
   }
   const user = await users.getUserName(userId);
   return c.json({ status: true, user });
-};
-
-export const serveLoginUser = async (c) => {
-  const users = c.get("usersClass");
-  const body = await c.req.json();
-  const { status, user, id } = await users.addUser(body);
-  setCookie(c, "user_id", id);
-  console.log(status, user);
-  return c.json({ status, user });
 };
 
 export const serveSubcribers = async (c) => {
@@ -109,7 +92,7 @@ export const serveUnLike = async (c) => {
 
 export const serveGithubIdentity = (c) => {
   const url = new URL("https://github.com/login/oauth/authorize");
-  const clientId = Deno.env.get("AUTH_CLIENT_ID");
+  const { clientId } = getDenoEnv();
   url.searchParams.set("client_id", clientId);
   url.searchParams.set("scope", "user");
   url.searchParams.set("redirect_uri", "http://localhost:8080/auth");
@@ -118,12 +101,10 @@ export const serveGithubIdentity = (c) => {
 
 export const serveServiceApi = async (c) => {
   const code = c.req.query("code");
-  const clientId = Deno.env.get("AUTH_CLIENT_ID");
-  const clientSecret = Deno.env.get("AUTH_CLIENT_SECRET");
+  const { clientId, clientSecret } = getDenoEnv();
   const body = setParams(clientId, clientSecret, code);
   const access_token = await requestAccessToken(body);
   const data = await requestProtectedResource(access_token);
-  const final = await setUserLogin(c, data);
-  console.log("helo");
+  const status = await setUserLogin(c, data);
   return c.redirect("http://localhost:5173");
 };

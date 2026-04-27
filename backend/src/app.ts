@@ -39,7 +39,6 @@ export const CreateApp = (
   app.post("/post/unLike", serveUnLike);
   app.post("/post/addSubscriber", serveAddSubscriber);
   app.post("/post/unSubscriber", serveUnSubscribe);
-  // app.post("/post/loginUser", setUserLogin);
   app.post("/post/addPost", serveAddPost);
   app.post("/post/deletePost", serveDeletePost);
   return app;
