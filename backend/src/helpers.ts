@@ -53,7 +53,7 @@ export const requestProtectedResource = async (access_token) => {
     },
   });
   const { login, id } = await res2.json();
-  return { user: login, _id: id };
+  return { user: login, _id: +id };
 };
 
 export const setUserLogin = async (c, body) => {

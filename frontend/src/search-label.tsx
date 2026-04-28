@@ -1,6 +1,16 @@
 import { useReducer, useState, useEffect } from "react";
 import * as api from "./api.tsx";
 
+import { styled, alpha } from "@mui/material/styles";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import InputBase from "@mui/material/InputBase";
+import IconButton from "@mui/material/IconButton";
+import SearchIcon from "@mui/icons-material/Search";
+import InputAdornment from "@mui/material/InputAdornment";
+
 const SearchList = ({
   searchList,
   handleSubscribeUser,
@@ -15,6 +25,8 @@ const SearchList = ({
     api.UnSubscriber(id);
     handleUnSubscribeUser(id);
   };
+
+  console.log("--> ", searchList);
 
   return (
     <ul className="lists">
@@ -52,7 +64,12 @@ export const SearchLabel = ({
 
   const handleSearch = () => {
     const ids = inputValue
-      ? usersData.filter((x) => x.user.includes(inputValue)).map((x) => x.id)
+      ? usersData
+          .filter((x) => {
+            console.log(x);
+            return x.user.includes(inputValue);
+          })
+          .map((x) => x.id)
       : [];
 
     setSearchIds(ids);
@@ -61,25 +78,55 @@ export const SearchLabel = ({
   const filteredUsers = usersData.filter((u) => searchIds.includes(u.id));
 
   return (
-    <div className="search posts">
-      <label>
-        <h2>Search Users</h2>
-      </label>
-      <input
-        type="text"
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-      />
-      {filteredUsers.length > 0 && (
-        <SearchList
-          searchList={filteredUsers}
-          handleSubscribeUser={handleSubscribeUser}
-          handleUnSubscribeUser={handleUnSubscribeUser}
-        />
-      )}
-      <button className="button-search" onClick={handleSearch}>
-        Search
-      </button>
-    </div>
+    <AppBar
+      position="static"
+      sx={{
+        backgroundColor: "white",
+        boxShadow: "none",
+        borderBottom: "1px solid #ddd",
+        color: "black",
+        width: "100%",
+      }}
+    >
+      <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+        {/* LEFT → Search */}
+        <Typography sx={{ color: "black", fontWeight: "bold" }}>
+          Readit
+        </Typography>
+        {/* RIGHT → Title */}
+
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            border: "1px solid #ccc",
+            borderRadius: "6px",
+            padding: "2px 8px",
+            width: "300px",
+          }}
+        >
+          <InputBase
+            placeholder="Search..."
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+            sx={{ color: "black", width: "100%" }}
+            startAdornment={
+              <InputAdornment position="start">
+                <IconButton onClick={handleSearch}>
+                  <SearchIcon sx={{ color: "black" }} />
+                </IconButton>
+              </InputAdornment>
+            }
+          />
+          {filteredUsers.length > 0 && (
+            <SearchList
+              searchList={filteredUsers}
+              handleSubscribeUser={handleSubscribeUser}
+              handleUnSubscribeUser={handleUnSubscribeUser}
+            />
+          )}
+        </Box>
+      </Toolbar>
+    </AppBar>
   );
 };

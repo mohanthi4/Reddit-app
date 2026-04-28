@@ -5,6 +5,9 @@ import { useReducer, useState, useEffect } from "react";
 import { SearchLabel } from "./search-label.tsx";
 import { subscribersReduce } from "./reducers/search-reducer.tsx";
 import * as api from "./api.tsx";
+import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
+import GitHubIcon from "@mui/icons-material/GitHub";
 
 const usePosts = () => {
   const [feedData, dispatchFeed] = useReducer(formReducer, {
@@ -61,27 +64,23 @@ export const Home = () => {
   );
 };
 
-export const Login = ({ handleUsersLogin }) => {
-  const handleLogin = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const user = formData.get("user")?.toString();
-    const password = formData.get("password")?.toString();
-    const body = { user, password };
-    const data = { status: true, user };
-    api.usersLogin(handleUsersLogin, body);
-  };
-
+export const Login = ({ handleLogin }) => {
   return (
-    <div className="form">
-      <h1>Login Page</h1>
-      <form onSubmit={handleLogin} className="formData">
-        <label>Username</label>
-        <input name="user" type="text" />
-        <label>Password</label>
-        <input type="password" name="" id="" name="password" />
-        <button className="loginButton">Login</button>
-      </form>
-    </div>
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100vh",
+      }}
+    >
+      <Button
+        variant="contained"
+        startIcon={<GitHubIcon />}
+        onClick={handleLogin}
+      >
+        Signin with Github
+      </Button>
+    </Box>
   );
 };
