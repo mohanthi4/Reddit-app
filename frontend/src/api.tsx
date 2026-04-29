@@ -391,9 +391,6 @@ export const mockDB = [
 
 export const fetchPosts = async ({ pageParam = 0 }) => {
   const res = mockDB[pageParam];
-
-  console.log("--> fetch", res);
-
   if (!res) {
     throw new Error("No data found");
   }
