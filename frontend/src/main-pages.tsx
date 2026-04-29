@@ -62,6 +62,7 @@ export const Home = () => {
         fetchNextPage();
       }
     });
+
     observer.observe(bottomRef.current);
 
     return () => observer.disconnect();
@@ -76,8 +77,8 @@ export const Home = () => {
         {isFetchingNextPage
           ? "Loading more..."
           : hasNextPage
-          ? "Scroll to load more"
-          : "No more posts"}
+            ? "Scroll to load more"
+            : "No more posts"}
       </div>
     </div>
   );
