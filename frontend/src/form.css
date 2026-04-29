@@ -1,21 +1,19 @@
-
-body{
-  display:flex;
+body {
+  display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.form{
-  height:20vh;
+.form {
+  height: 20vh;
   width: 90vw;
 }
 
-.posts{
-  border:1px solid #777;
+.posts {
+  border: 1px solid #777;
   border-radius: 2px;
   margin: 50px;
-  padding:20px;
-
+  padding: 20px;
 }
 
 .lists {
@@ -23,7 +21,7 @@ body{
   width: 500px;
   border: 1px solid #ddd;
   border-radius: 10px;
-    background: #fff;
+  background: #fff;
 }
 
 .lists li {
@@ -33,97 +31,97 @@ body{
   border-bottom: 1px solid #eee;
 }
 
-.green{
-  color:rgb(69, 205, 69);
+.green {
+  color: rgb(69, 205, 69);
   border-color: rgb(69, 205, 69);
 }
 
-.blue{
-  color:rgb(43, 132, 233);
-  border-color:rgb(43, 132, 233) ;
+.blue {
+  color: rgb(43, 132, 233);
+  border-color: rgb(43, 132, 233);
 }
 
-.list{
-height:50px;
+.list {
+  height: 50px;
 }
 
-.search{
+.search {
   display: flex;
   flex-direction: row;
-   width: 90vw;
+  width: 90vw;
 }
 
-.button-search{
+.button-search {
   background-color: rgb(64, 125, 210);
   border-color: rgb(64, 125, 210);
   color: white;
-  height:30px;
-  width:70px;
+  height: 30px;
+  width: 70px;
 }
 
-input{
-  height:40px;
-  width:100%
+input {
+  height: 40px;
+  width: 100%;
 }
 
-textarea{
-  height:200px
+textarea {
+  height: 200px;
 }
 
-.loginButton{
+.loginButton {
   background-color: rgb(64, 125, 210);
   border-color: rgb(64, 125, 210);
   color: white;
-  height:30px;
-  width:50px;
+  height: 30px;
+  width: 50px;
 }
 
-.formData input,textarea,button{
+.formData input, textarea, button {
   width: 100%;
   margin: 10px;
 }
 
-.formData button{
+.formData button {
   background-color: rgb(64, 125, 210);
   border-color: rgb(64, 125, 210);
   color: white;
-  height:30px;
-  width:70px;
+  height: 30px;
+  width: 70px;
 }
 
-.feed-article{
+.feed-article {
   border-bottom: 1px solid #777;
 }
 
-.button-action{
-  margin:10px;
-  width:60px;
+.button-action {
+  margin: 10px;
+  width: 60px;
 }
 
-.feedData{
+.feedData {
   border: 1px solid #888;
   box-shadow: #777;
   padding: 30px;
 }
 
-.my-user{
+.my-user {
   margin-left: 50px;
   font-size: 14px;
   font-weight: 100;
-  border:1px solid rgb(82, 235, 82);
-  padding:6px;
-  color:rgb(19, 148, 19);
+  border: 1px solid rgb(82, 235, 82);
+  padding: 6px;
+  color: rgb(19, 148, 19);
 }
 
-.likes{
-width:50px;
+.likes {
+  width: 50px;
 }
-.like-true{
-  color:rgb(73, 160, 248);
-  border-color:rgb(40, 144, 248) ;
+.like-true {
+  color: rgb(73, 160, 248);
+  border-color: rgb(40, 144, 248);
 }
 
-.unlike{
-  color:#888;
-  border:#686666
+.unlike {
+  color: #888;
+  border: #686666;
 }

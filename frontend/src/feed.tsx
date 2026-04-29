@@ -1,6 +1,6 @@
 import {
-  formReducer,
   type FeedData,
+  formReducer,
   type PostData,
 } from "./reducers/form-reducer.tsx";
 import * as api from "./api.tsx";
@@ -12,14 +12,14 @@ type FeedProps = {
 
 const UserHeader = ({ user, currentUser, userId }) => (
   <h2>
-    {currentUser === userId ? (
-      <>
-        {user}
-        <span className="my-user">You</span>
-      </>
-    ) : (
-      user
-    )}
+    {currentUser === userId
+      ? (
+        <>
+          {user}
+          <span className="my-user">You</span>
+        </>
+      )
+      : user}
   </h2>
 );
 
@@ -32,7 +32,7 @@ const LikeButton = ({ isLiked, likes, onLike, onUnlike }) => (
   </button>
 );
 
-const PostArticle = ({ post, currentUser, actions }) => {
+const PostArticle = ({ post, currentUser }) => {
   const {
     _id: id,
     userId,
@@ -90,33 +90,38 @@ const PostArticle = ({ post, currentUser, actions }) => {
   );
 };
 
-export const Feed = ({ data, usersData, actions }: FeedProps) => {
-  const feed = usersData.all.filter((x) => x.isSubscribe);
-  const data1 = feed.map((x) => x.id);
-  const channelsFeed = { myId: usersData.current, subscribers: data1 };
-  const posts = data.posts.filter((x) => {
-    return (
-      x.userId === channelsFeed.myId ||
-      channelsFeed.subscribers.includes(x.userId)
-    );
-  });
+export const Feed = ({ data }: FeedProps) => {
+  // const feed = usersData.all.filter((x) => x.isSubscribe);
+  // const data1 = feed.map((x) => x.id);
+  // const channelsFeed = { myId: usersData.current, subscribers: data1 };
+  const channelsFeed = { myId: 101, subscribers: [103, 104] };
+  // const posts = data.posts.filter((x) => {
+  //   return (
+  //     x.userId === channelsFeed.myId ||
+  //     channelsFeed.subscribers.includes(x.userId)
+  //   );
+  // });
 
   return (
     <div className="feed posts">
       <h1>Feed</h1>
       <div className="feedData">
-        {posts.length > 0 ? (
-          posts.map((f) => (
-            <PostArticle
-              key={f._id}
-              post={f}
-              currentUser={channelsFeed.myId}
-              actions={actions}
-            />
-          ))
-        ) : (
-          <p>No posts yet</p>
-        )}
+        {data.pages.length > 0
+          ? (
+            data.pages.map((page, i) => (
+              <div key={i}>
+                {page.posts.map((post) => (
+                  <PostArticle
+                    key={post._id}
+                    post={post}
+                    currentUser={channelsFeed.myId}
+                    // actions={actions}
+                  />
+                ))}
+              </div>
+            ))
+          )
+          : <p>No posts yet</p>}
       </div>
     </div>
   );

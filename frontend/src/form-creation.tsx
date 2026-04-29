@@ -39,7 +39,8 @@ export const FormCreation = ({ addPost, current }: AddPosts) => {
         <textarea
           name="description"
           placeholder="Write your post..."
-        ></textarea>
+        >
+        </textarea>
         <button>Post</button>
       </form>
     </div>

@@ -1,115 +1,6 @@
-const responeByCheckingError = async (res) => {
-  if (!res.ok) {
-    const text = await res.text();
-    console.error("Server error:", text);
-    return null;
-  }
-  return res.json();
-};
-
-// export const getFeed = (dispatchFeed) => {
-//   fetch("http://localhost:8080/get/feedInfo", { credentials: "include" })
-//     .then(responeByCheckingError)
-//     .then((data) => {
-//       if (!data) return;
-//       dispatchFeed(data);
-//     });
-// };
-
-export const getSubscribers = (dispatch) => {
-  fetch("http://localhost:8080/get/subscribers", { credentials: "include" })
-    .then(responeByCheckingError)
-    .then((data) => {
-      if (!data) return;
-      dispatch(data);
-    });
-};
-
-export const usersLogin = (handleUsersLogin, body) => {
-  fetch("http://localhost:8080/post/loginUser", {
-    method: "post",
-    body: JSON.stringify(body),
-    credentials: "include",
-  })
-    .then(responeByCheckingError)
-    .then((res) => {
-      if (!res) return;
-      handleUsersLogin(res);
-    })
-    .catch((e) => console.log(e));
-};
-
-export const checkUserLogin = (dispatch) => {
-  fetch("http://localhost:8080/get/checkUser", { credentials: "include" })
-    .then(responeByCheckingError)
-    .then((data) => {
-      if (!data) return;
-      dispatch({ type: "init-login", content: data });
-    });
-};
-
-export const addingPost = (body) => {
-  fetch("http://localhost:8080/post/addPost", {
-    method: "post",
-    body: JSON.stringify(body),
-    credentials: "include",
-  })
-    .then(responeByCheckingError)
-    .catch((e) => console.log(e));
-};
-
-export const deletion = (id) => {
-  fetch("http://localhost:8080/post/deletePost", {
-    method: "post",
-    body: JSON.stringify(id),
-  })
-    .then(responeByCheckingError)
-    .catch((e) => console.error(e));
-};
-
-export const likePost = (id) => {
-  fetch("http://localhost:8080/post/addLike", {
-    method: "post",
-    body: JSON.stringify(id),
-    credentials: "include",
-  })
-    .then(responeByCheckingError)
-    .catch((e) => console.error(e));
-};
-
-export const unLikePost = (id) => {
-  fetch("http://localhost:8080/post/unLike", {
-    method: "post",
-    body: JSON.stringify(id),
-    credentials: "include",
-  })
-    .then(responeByCheckingError)
-    .catch((e) => console.error(e));
-};
-
-export const addSubscriber = (id) => {
-  fetch("http://localhost:8080/post/addSubscriber", {
-    method: "post",
-    body: JSON.stringify(id),
-    credentials: "include",
-  })
-    .then(responeByCheckingError)
-    .catch((e) => console.error(e));
-};
-
-export const UnSubscriber = (id) => {
-  fetch("http://localhost:8080/post/unSubscriber", {
-    method: "post",
-    body: JSON.stringify(id),
-    credentials: "include",
-  })
-    .then(responeByCheckingError)
-    .catch((e) => console.error(e));
-};
-
 export const mockDB = [
   {
-    posts: [
+    data: [
       {
         _id: 1,
         userId: 101,
@@ -118,7 +9,6 @@ export const mockDB = [
         description: "Description of post 1",
         likes: 3,
         likedUsers: [102, 103],
-        date: "2026-04-01",
       },
       {
         _id: 2,
@@ -128,7 +18,6 @@ export const mockDB = [
         description: "Description of post 2",
         likes: 1,
         likedUsers: [101],
-        date: "2026-04-02",
       },
       {
         _id: 3,
@@ -138,7 +27,6 @@ export const mockDB = [
         description: "Description of post 3",
         likes: 5,
         likedUsers: [101, 102],
-        date: "2026-04-03",
       },
       {
         _id: 4,
@@ -148,7 +36,6 @@ export const mockDB = [
         description: "Description of post 4",
         likes: 0,
         likedUsers: [],
-        date: "2026-04-04",
       },
       {
         _id: 5,
@@ -158,14 +45,13 @@ export const mockDB = [
         description: "Description of post 5",
         likes: 2,
         likedUsers: [101],
-        date: "2026-04-05",
       },
     ],
-    nextCursor: 2,
+    nextCursor: 6,
   },
 
   {
-    posts: [
+    data: [
       {
         _id: 6,
         userId: 101,
@@ -174,7 +60,6 @@ export const mockDB = [
         description: "Description of post 6",
         likes: 7,
         likedUsers: [102],
-        date: "2026-04-06",
       },
       {
         _id: 7,
@@ -184,7 +69,6 @@ export const mockDB = [
         description: "Description of post 7",
         likes: 4,
         likedUsers: [103],
-        date: "2026-04-07",
       },
       {
         _id: 8,
@@ -194,7 +78,6 @@ export const mockDB = [
         description: "Description of post 8",
         likes: 9,
         likedUsers: [101, 104],
-        date: "2026-04-08",
       },
       {
         _id: 9,
@@ -204,7 +87,6 @@ export const mockDB = [
         description: "Description of post 9",
         likes: 2,
         likedUsers: [],
-        date: "2026-04-09",
       },
       {
         _id: 10,
@@ -214,14 +96,13 @@ export const mockDB = [
         description: "Description of post 10",
         likes: 6,
         likedUsers: [102],
-        date: "2026-04-10",
       },
     ],
-    nextCursor: 3,
+    nextCursor: 11,
   },
 
   {
-    posts: [
+    data: [
       {
         _id: 11,
         userId: 101,
@@ -230,7 +111,6 @@ export const mockDB = [
         description: "Description of post 11",
         likes: 3,
         likedUsers: [],
-        date: "2026-04-11",
       },
       {
         _id: 12,
@@ -240,7 +120,6 @@ export const mockDB = [
         description: "Description of post 12",
         likes: 8,
         likedUsers: [103],
-        date: "2026-04-12",
       },
       {
         _id: 13,
@@ -250,7 +129,6 @@ export const mockDB = [
         description: "Description of post 13",
         likes: 1,
         likedUsers: [101],
-        date: "2026-04-13",
       },
       {
         _id: 14,
@@ -260,7 +138,6 @@ export const mockDB = [
         description: "Description of post 14",
         likes: 10,
         likedUsers: [105],
-        date: "2026-04-14",
       },
       {
         _id: 15,
@@ -270,14 +147,13 @@ export const mockDB = [
         description: "Description of post 15",
         likes: 4,
         likedUsers: [101, 102],
-        date: "2026-04-15",
       },
     ],
-    nextCursor: 4,
+    nextCursor: 16,
   },
 
   {
-    posts: [
+    data: [
       {
         _id: 16,
         userId: 101,
@@ -286,7 +162,6 @@ export const mockDB = [
         description: "Description of post 16",
         likes: 6,
         likedUsers: [],
-        date: "2026-04-16",
       },
       {
         _id: 17,
@@ -296,7 +171,6 @@ export const mockDB = [
         description: "Description of post 17",
         likes: 2,
         likedUsers: [103],
-        date: "2026-04-17",
       },
       {
         _id: 18,
@@ -306,7 +180,6 @@ export const mockDB = [
         description: "Description of post 18",
         likes: 7,
         likedUsers: [104],
-        date: "2026-04-18",
       },
       {
         _id: 19,
@@ -316,7 +189,6 @@ export const mockDB = [
         description: "Description of post 19",
         likes: 5,
         likedUsers: [101],
-        date: "2026-04-19",
       },
       {
         _id: 20,
@@ -326,14 +198,13 @@ export const mockDB = [
         description: "Description of post 20",
         likes: 9,
         likedUsers: [102, 103],
-        date: "2026-04-20",
       },
     ],
-    nextCursor: 5,
+    nextCursor: 21,
   },
 
   {
-    posts: [
+    data: [
       {
         _id: 21,
         userId: 101,
@@ -342,7 +213,6 @@ export const mockDB = [
         description: "Description of post 21",
         likes: 1,
         likedUsers: [],
-        date: "2026-04-21",
       },
       {
         _id: 22,
@@ -352,7 +222,6 @@ export const mockDB = [
         description: "Description of post 22",
         likes: 3,
         likedUsers: [101],
-        date: "2026-04-22",
       },
       {
         _id: 23,
@@ -362,7 +231,6 @@ export const mockDB = [
         description: "Description of post 23",
         likes: 11,
         likedUsers: [104, 105],
-        date: "2026-04-23",
       },
       {
         _id: 24,
@@ -372,7 +240,6 @@ export const mockDB = [
         description: "Description of post 24",
         likes: 8,
         likedUsers: [101],
-        date: "2026-04-24",
       },
       {
         _id: 25,
@@ -382,21 +249,8 @@ export const mockDB = [
         description: "Description of post 25",
         likes: 6,
         likedUsers: [102, 103],
-        date: "2026-04-25",
       },
     ],
     nextCursor: null,
   },
 ];
-
-export const fetchPosts = async ({ pageParam = 0 }) => {
-  const res = mockDB[pageParam];
-
-  console.log("--> fetch", res);
-
-  if (!res) {
-    throw new Error("No data found");
-  }
-
-  return res;
-};

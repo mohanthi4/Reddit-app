@@ -1,7 +1,7 @@
-import { useReducer, useState, useEffect } from "react";
+import { useEffect, useReducer, useState } from "react";
 import * as api from "./api.tsx";
 
-import { styled, alpha } from "@mui/material/styles";
+import { alpha, styled } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -33,18 +33,23 @@ const SearchList = ({
       {searchList.map((s) => (
         <li key={s.id}>
           <h1>{s.user}</h1>
-          {s.isSubscribe ? (
-            <button
-              className="green"
-              onClick={(e) => handleUnSubscribe(e, s.id)}
-            >
-              Subscribed ✓
-            </button>
-          ) : (
-            <button className="blue" onClick={(e) => handleSubscribe(e, s.id)}>
-              Subscribe
-            </button>
-          )}
+          {s.isSubscribe
+            ? (
+              <button
+                className="green"
+                onClick={(e) => handleUnSubscribe(e, s.id)}
+              >
+                Subscribed ✓
+              </button>
+            )
+            : (
+              <button
+                className="blue"
+                onClick={(e) => handleSubscribe(e, s.id)}
+              >
+                Subscribe
+              </button>
+            )}
         </li>
       ))}
     </ul>
@@ -65,11 +70,11 @@ export const SearchLabel = ({
   const handleSearch = () => {
     const ids = inputValue
       ? usersData
-          .filter((x) => {
-            console.log(x);
-            return x.user.includes(inputValue);
-          })
-          .map((x) => x.id)
+        .filter((x) => {
+          console.log(x);
+          return x.user.includes(inputValue);
+        })
+        .map((x) => x.id)
       : [];
 
     setSearchIds(ids);
@@ -118,14 +123,14 @@ export const SearchLabel = ({
               </InputAdornment>
             }
           />
-          {filteredUsers.length > 0 && (
-            <SearchList
-              searchList={filteredUsers}
-              handleSubscribeUser={handleSubscribeUser}
-              handleUnSubscribeUser={handleUnSubscribeUser}
-            />
-          )}
         </Box>
+        {filteredUsers.length > 0 && (
+          <SearchList
+            searchList={filteredUsers}
+            handleSubscribeUser={handleSubscribeUser}
+            handleUnSubscribeUser={handleUnSubscribeUser}
+          />
+        )}
       </Toolbar>
     </AppBar>
   );
