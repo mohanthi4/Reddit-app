@@ -3,7 +3,6 @@ import {
   formReducer,
   type PostData,
 } from "./reducers/form-reducer.tsx";
-import * as api from "./api.tsx";
 
 type FeedProps = {
   data: FeedData;
@@ -12,14 +11,14 @@ type FeedProps = {
 
 const UserHeader = ({ user, currentUser, userId }) => (
   <h2>
-    {currentUser === userId
-      ? (
-        <>
-          {user}
-          <span className="my-user">You</span>
-        </>
-      )
-      : user}
+    {currentUser === userId ? (
+      <>
+        {user}
+        <span className="my-user">You</span>
+      </>
+    ) : (
+      user
+    )}
   </h2>
 );
 
@@ -32,7 +31,13 @@ const LikeButton = ({ isLiked, likes, onLike, onUnlike }) => (
   </button>
 );
 
-const PostArticle = ({ post, currentUser }) => {
+const PostArticle = ({
+  post,
+  currentUser,
+  deletePost,
+  likePost,
+  unLikePost,
+}) => {
   const {
     _id: id,
     userId,
@@ -43,23 +48,6 @@ const PostArticle = ({ post, currentUser }) => {
     likes,
     likedUsers,
   } = post;
-  const handleDeletePost = (e) => {
-    e.preventDefault();
-    actions.deletePost(id);
-    api.deletion(id);
-  };
-
-  const handleLike = (e) => {
-    const content = { id, currentUser };
-    actions.likePost(content);
-    api.likePost(id);
-  };
-
-  const handleUnlike = (e) => {
-    const content = { id, currentUser };
-    actions.unLikePost(content);
-    api.unLikePost(id);
-  };
 
   const isLiked = likedUsers.includes(currentUser);
   return (
@@ -71,57 +59,49 @@ const PostArticle = ({ post, currentUser }) => {
         <p>{description}</p>
       </div>
       {currentUser === userId && (
-        <button
-          className="button-action"
-          onClick={(e) => {
-            handleDeletePost(e);
-          }}
-        >
+        <button className="button-action" onClick={() => deletePost.mutate(id)}>
           Delete
         </button>
       )}
       <LikeButton
         isLiked={isLiked}
         likes={likes}
-        onLike={handleLike}
-        onUnlike={handleUnlike}
+        onLike={() => likePost.mutate(id)}
+        onUnlike={() => unLikePost.mutate(id)}
       />
     </article>
   );
 };
 
-export const Feed = ({ data }: FeedProps) => {
-  // const feed = usersData.all.filter((x) => x.isSubscribe);
-  // const data1 = feed.map((x) => x.id);
-  // const channelsFeed = { myId: usersData.current, subscribers: data1 };
-  const channelsFeed = { myId: 101, subscribers: [103, 104] };
-  // const posts = data.posts.filter((x) => {
-  //   return (
-  //     x.userId === channelsFeed.myId ||
-  //     channelsFeed.subscribers.includes(x.userId)
-  //   );
-  // });
-
+export const Feed = ({
+  data,
+  usersData,
+  deletePost,
+  likePost,
+  unLikePost,
+}: FeedProps) => {
   return (
     <div className="feed posts">
       <h1>Feed</h1>
       <div className="feedData">
-        {data.pages.length > 0
-          ? (
-            data.pages.map((page, i) => (
-              <div key={i}>
-                {page.posts.map((post) => (
-                  <PostArticle
-                    key={post._id}
-                    post={post}
-                    currentUser={channelsFeed.myId}
-                    // actions={actions}
-                  />
-                ))}
-              </div>
-            ))
-          )
-          : <p>No posts yet</p>}
+        {data.pages.length > 0 ? (
+          data.pages.map((page, i) => (
+            <div key={i}>
+              {page.posts.map((post) => (
+                <PostArticle
+                  key={post._id}
+                  post={post}
+                  currentUser={usersData.current}
+                  deletePost={deletePost}
+                  likePost={likePost}
+                  unLikePost={unLikePost}
+                />
+              ))}
+            </div>
+          ))
+        ) : (
+          <p>No posts yet</p>
+        )}
       </div>
     </div>
   );

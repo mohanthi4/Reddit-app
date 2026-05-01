@@ -1,7 +1,6 @@
 import "./form.css";
 import { useContext } from "react";
 import { UserContext } from "./App.tsx";
-import * as api from "./api.tsx";
 import { format } from "date-fns";
 
 type AddPosts = {
@@ -19,14 +18,14 @@ const getPostInfo = (e, userName, current) => {
   return { user, userId: current, title, description, date, likes, likedUsers };
 };
 
-export const FormCreation = ({ addPost, current }: AddPosts) => {
+export const FormCreation = ({ current, addPost }: AddPosts) => {
   const userName = useContext(UserContext);
+
   const handleAddPost = (e) => {
     e.preventDefault();
     const posts = getPostInfo(e, userName, current);
     const { userId, ...body } = posts;
-    addPost(posts);
-    api.addingPost(body);
+    addPost.mutate(body);
   };
 
   return (
@@ -39,8 +38,7 @@ export const FormCreation = ({ addPost, current }: AddPosts) => {
         <textarea
           name="description"
           placeholder="Write your post..."
-        >
-        </textarea>
+        ></textarea>
         <button>Post</button>
       </form>
     </div>

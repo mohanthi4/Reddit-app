@@ -8,8 +8,11 @@ import * as api from "./api.tsx";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import GitHubIcon from "@mui/icons-material/GitHub";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { fetchPosts } from "./api.tsx";
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 
 const usePosts = () => {
   const [feedData, dispatchFeed] = useReducer(formReducer, {
@@ -44,20 +47,42 @@ const useUsers = () => {
   return { usersData, userActions };
 };
 
+const usePostMutation = (mutationFn) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn,
+    onSuccess: () => {
+      queryClient.invalidateQueries(["posts"]);
+    },
+  });
+};
+
+const postMutations = () => {
+  const addMutation = usePostMutation(api.addingPost);
+  const likeMutation = usePostMutation(api.likePost);
+  const unlikeMutation = usePostMutation(api.unLikePost);
+  const deleteMutation = usePostMutation(api.deletion);
+
+  return { addMutation, deleteMutation, likeMutation, unlikeMutation };
+};
+
 export const Home = () => {
   const bottomRef = useRef<HTMLDivElement | null>(null);
-  const { feedData, postActions } = usePosts();
   const { usersData, userActions } = useUsers();
+  const { addMutation, deleteMutation, likeMutation, unlikeMutation } =
+    postMutations();
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
     useInfiniteQuery({
       queryKey: ["posts"],
-      queryFn: fetchPosts,
+      queryFn: api.fetchPosts,
       getNextPageParam: (lastPage) => lastPage.nextCursor,
     });
 
   useEffect(() => {
-    // api.getSubscribers(userActions.initSubcribers);
+    api.getSubscribers(userActions.initSubcribers);
+
     if (!bottomRef.current) return;
 
     const observer = new IntersectionObserver((entries) => {
@@ -71,7 +96,6 @@ export const Home = () => {
   }, [hasNextPage, fetchNextPage, isFetchingNextPage]);
 
   if (status === "pending") return <p>Loading...</p>;
-  console.log("--> main", data);
 
   return (
     <div className="form">
@@ -80,15 +104,15 @@ export const Home = () => {
         handleSubscribeUser={userActions.subscribe}
         handleUnSubscribeUser={userActions.unSubscribe}
       />
-      <FormCreation addPost={postActions.addPost} current={usersData.current} />
-      <Feed data={data} />
-      <div ref={bottomRef} style={{ height: 50 }}>
-        {isFetchingNextPage
-          ? "Loading more..."
-          : hasNextPage
-            ? "Scroll to load more"
-            : "No more posts"}
-      </div>
+      <FormCreation current={usersData.current} addPost={addMutation} />
+      <Feed
+        data={data}
+        usersData={usersData}
+        deletePost={deleteMutation}
+        likePost={likeMutation}
+        unLikePost={unlikeMutation}
+      />
+      <div ref={bottomRef} ></div>
     </div>
   );
 };

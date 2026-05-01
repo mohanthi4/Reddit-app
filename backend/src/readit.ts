@@ -23,19 +23,17 @@ export default class Readit {
     return content;
   }
   async deletePost(id: number) {
-    const data = await this.#posts.findOneAndDelete({ _id: id });
-    return data._id;
+    await this.#posts.findOneAndDelete({ _id: id });
+    const content = await this.#posts.find().toArray();
+    return content;
   }
 
   async getAllPosts(from: number, to: number) {
     const data = await this.#posts.find().sort({ _id: -1 }).skip(from).limit(
       to + 1,
     ).toArray();
-    // const data = await this.#posts.find({ userId: { $in: [...Ids] } })
-    //   .toArray();
     const hasNextPage = data.length > to;
     const posts = hasNextPage ? data.slice(0, to) : data;
-
     const nextCursor = hasNextPage ? from + to : null;
     return { posts, nextCursor };
   }
