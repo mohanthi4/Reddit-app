@@ -32,9 +32,9 @@ export const CreateApp = (
   });
   app.get("/get/handleAuthLogin", serveGithubIdentity);
   app.get("/auth", serveServiceApi);
-  app.get("/get/feedInfo", serveFeedInfo);
   app.get("/get/checkUser", serveCheckUser);
   app.get("/get/subscribers", serveSubcribers);
+  app.post("/post/feedInfo", serveFeedInfo);
   app.post("/post/addLike", serveAddLike);
   app.post("/post/unLike", serveUnLike);
   app.post("/post/addSubscriber", serveAddSubscriber);

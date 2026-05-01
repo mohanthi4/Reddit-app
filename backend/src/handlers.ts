@@ -15,13 +15,16 @@ type honoHandler = (data: Context) => Promise<Response>;
 export const serveFeedInfo: honoHandler = async (c) => {
   const { userId, readit, users } = getClassAndCookie(c);
   if (!userId) {
+    console.log("hi");
     return c.json({ posts: [], nextId: 1 });
   }
-  const ids = await users.userSubcribres(userId);
-  ids.push(userId);
-  const content = await readit.getAllPosts(ids);
-  const finalPosts = await getFinalPosts(content, users);
-  return c.json(finalPosts);
+  // const ids = await users.userSubcribres(userId);
+  // ids.push(userId);
+  const { cursor, limit } = await c.req.json();
+  console.log({ cursor }, { limit });
+  const { posts, nextCursor } = await readit.getAllPosts(cursor, limit);
+  const finalPosts = await getFinalPosts(posts, users);
+  return c.json({ posts: finalPosts, nextCursor });
 };
 
 export const serveAddPost: honoHandler = async (c) => {

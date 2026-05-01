@@ -1,3 +1,5 @@
+import { IntegerType } from "mongodb";
+
 export type PostData = {
   _id?: number;
   user: string;
@@ -25,10 +27,17 @@ export default class Readit {
     return data._id;
   }
 
-  async getAllPosts(Ids) {
-    const data = await this.#posts.find({ userId: { $in: [...Ids] } })
-      .toArray();
-    return { posts: data, nextId: this.#nextId };
+  async getAllPosts(from: number, to: number) {
+    const data = await this.#posts.find().sort({ _id: -1 }).skip(from).limit(
+      to + 1,
+    ).toArray();
+    // const data = await this.#posts.find({ userId: { $in: [...Ids] } })
+    //   .toArray();
+    const hasNextPage = data.length > to;
+    const posts = hasNextPage ? data.slice(0, to) : data;
+
+    const nextCursor = hasNextPage ? from + to : null;
+    return { posts, nextCursor };
   }
 
   async addLike(Uid, id) {

@@ -7,14 +7,15 @@ const responeByCheckingError = async (res) => {
   return res.json();
 };
 
-// export const getFeed = (dispatchFeed) => {
-//   fetch("http://localhost:8080/get/feedInfo", { credentials: "include" })
-//     .then(responeByCheckingError)
-//     .then((data) => {
-//       if (!data) return;
-//       dispatchFeed(data);
-//     });
-// };
+export const getFeed = (dispatchFeed) => {
+  fetch("http://localhost:8080/get/feedInfo", { credentials: "include" })
+    .then(responeByCheckingError)
+    .then((data) => {
+      if (!data) return;
+      console.log("--> after feed", data);
+      dispatchFeed(data);
+    });
+};
 
 export const getSubscribers = (dispatch) => {
   fetch("http://localhost:8080/get/subscribers", { credentials: "include" })
@@ -391,10 +392,20 @@ export const mockDB = [
 
 export const fetchPosts = async ({ pageParam = 0 }) => {
   const res = mockDB[pageParam];
+  const body = JSON.stringify({ cursor: pageParam, limit: 5 });
+  const res2 = await fetch("http://localhost:8080/post/feedInfo", {
+    body,
+    method: "post",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then(responeByCheckingError);
+  console.log("in fetch back", res2);
 
-  if (!res) {
+  if (!res2) {
     throw new Error("No data found");
   }
 
-  return res;
+  return res2;
 };

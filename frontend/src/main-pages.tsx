@@ -46,6 +46,8 @@ const useUsers = () => {
 
 export const Home = () => {
   const bottomRef = useRef<HTMLDivElement | null>(null);
+  const { feedData, postActions } = usePosts();
+  const { usersData, userActions } = useUsers();
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
     useInfiniteQuery({
@@ -55,6 +57,7 @@ export const Home = () => {
     });
 
   useEffect(() => {
+    // api.getSubscribers(userActions.initSubcribers);
     if (!bottomRef.current) return;
 
     const observer = new IntersectionObserver((entries) => {
@@ -64,14 +67,20 @@ export const Home = () => {
     });
 
     observer.observe(bottomRef.current);
-
     return () => observer.disconnect();
-  }, [hasNextPage, fetchNextPage]);
+  }, [hasNextPage, fetchNextPage, isFetchingNextPage]);
 
   if (status === "pending") return <p>Loading...</p>;
+  console.log("--> main", data);
 
   return (
     <div className="form">
+      <SearchLabel
+        usersData={usersData.all}
+        handleSubscribeUser={userActions.subscribe}
+        handleUnSubscribeUser={userActions.unSubscribe}
+      />
+      <FormCreation addPost={postActions.addPost} current={usersData.current} />
       <Feed data={data} />
       <div ref={bottomRef} style={{ height: 50 }}>
         {isFetchingNextPage
@@ -83,28 +92,6 @@ export const Home = () => {
     </div>
   );
 };
-
-// export const Home = () => {
-//   const { feedData, postActions } = usePosts();
-//   const { usersData, userActions } = useUsers();
-
-//   useEffect(() => {
-//     api.getFeed(postActions.initPosts);
-//     api.getSubscribers(userActions.initSubcribers);
-//   }, []);
-
-//   return (
-//     <div className="form">
-//       <SearchLabel
-//         usersData={usersData.all}
-//         handleSubscribeUser={userActions.subscribe}
-//         handleUnSubscribeUser={userActions.unSubscribe}
-//       />
-//       <FormCreation addPost={postActions.addPost} current={usersData.current} />
-//       <Feed data={feedData} usersData={usersData} actions={postActions} />
-//     </div>
-//   );
-// };
 
 export const Login = ({ handleLogin }) => {
   return (

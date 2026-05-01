@@ -1,22 +1,23 @@
 import { getCookie, setCookie } from "hono/cookie";
 
-const attachUserToPosts = async (content, users) => {
-  return await Promise.all(
-    content.posts.map(async (ele) => {
-      const userName = await users.getUserName(ele.userId);
-      return {
-        ...ele,
-        user: userName,
-      };
-    }),
-  );
-};
+// const attachUserToPosts = async (content, users) => {
+//   return await Promise.all(
+//     content.posts.map(async (ele) => {
+//       const userName = await users.getUserName(ele.userId);
+//       return {
+//         ...ele,
+//         user: userName,
+//       };
+//     }),
+//   );
+// };
 
 export const getFinalPosts = async (content, users) => {
-  const finalData = {};
-  finalData.posts = await attachUserToPosts(content, users);
-  finalData.nextId = content.nextId;
-  finalData.posts.reverse();
+  const finalData = content;
+  // finalData.posts = await attachUserToPosts(content, users);
+  // finalData.nextId = content.nextId;
+  finalData.reverse();
+  console.log("final ", finalData);
   return finalData;
 };
 
