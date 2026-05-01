@@ -1,6 +1,5 @@
 import { Feed } from "./feed.tsx";
 import { FormCreation } from "./form-creation.tsx";
-import { formReducer, type PostData } from "./reducers/form-reducer.tsx";
 import { useEffect, useReducer, useRef, useState } from "react";
 import { SearchLabel } from "./search-label.tsx";
 import { subscribersReduce } from "./reducers/search-reducer.tsx";
@@ -13,23 +12,6 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-
-const usePosts = () => {
-  const [feedData, dispatchFeed] = useReducer(formReducer, {
-    nextId: 1,
-    posts: [],
-  });
-
-  const postActions = {
-    initPosts: (content) => dispatchFeed({ type: "init-posts", content }),
-    addPost: (content) => dispatchFeed({ type: "add-post", content }),
-    deletePost: (content) => dispatchFeed({ type: "delete-post", content }),
-    likePost: (content) => dispatchFeed({ type: "like-post", content }),
-    unLikePost: (content) => dispatchFeed({ type: "unlike-post", content }),
-  };
-
-  return { feedData, postActions };
-};
 
 const useUsers = () => {
   const [usersData, dispatch] = useReducer(subscribersReduce, {
@@ -101,18 +83,24 @@ export const Home = () => {
     <div className="form">
       <SearchLabel
         usersData={usersData.all}
-        handleSubscribeUser={userActions.subscribe}
-        handleUnSubscribeUser={userActions.unSubscribe}
+        userActions={{
+          handleSubscribeUser: userActions.subscribe,
+          handleUnSubscribeUser: userActions.unSubscribe,
+        }}
       />
       <FormCreation current={usersData.current} addPost={addMutation} />
       <Feed
         data={data}
         usersData={usersData}
-        deletePost={deleteMutation}
-        likePost={likeMutation}
-        unLikePost={unlikeMutation}
+        postActions={{ deleteMutation, likeMutation, unlikeMutation }}
       />
-      <div ref={bottomRef} ></div>
+      <div ref={bottomRef} style={{ height: 50 }}>
+        {isFetchingNextPage
+          ? "Loading more..."
+          : hasNextPage
+            ? "Scroll to load more"
+            : "No more posts"}
+      </div>
     </div>
   );
 };

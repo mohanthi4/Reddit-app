@@ -1,14 +1,3 @@
-import {
-  type FeedData,
-  formReducer,
-  type PostData,
-} from "./reducers/form-reducer.tsx";
-
-type FeedProps = {
-  data: FeedData;
-  deletePost: (id: number) => void;
-};
-
 const UserHeader = ({ user, currentUser, userId }) => (
   <h2>
     {currentUser === userId ? (
@@ -27,17 +16,11 @@ const LikeButton = ({ isLiked, likes, onLike, onUnlike }) => (
     className={`likes ${isLiked ? "like-true" : "unlike"}`}
     onClick={isLiked ? onUnlike : onLike}
   >
-    Liked {likes}
+    {likes} Liked
   </button>
 );
 
-const PostArticle = ({
-  post,
-  currentUser,
-  deletePost,
-  likePost,
-  unLikePost,
-}) => {
+const PostArticle = ({ post, currentUser, postActions }) => {
   const {
     _id: id,
     userId,
@@ -59,27 +42,24 @@ const PostArticle = ({
         <p>{description}</p>
       </div>
       {currentUser === userId && (
-        <button className="button-action" onClick={() => deletePost.mutate(id)}>
+        <button
+          className="button-action"
+          onClick={() => postActions.deleteMutation.mutate(id)}
+        >
           Delete
         </button>
       )}
       <LikeButton
         isLiked={isLiked}
         likes={likes}
-        onLike={() => likePost.mutate(id)}
-        onUnlike={() => unLikePost.mutate(id)}
+        onLike={() => postActions.likeMutation.mutate(id)}
+        onUnlike={() => postActions.unlikeMutation.mutate(id)}
       />
     </article>
   );
 };
 
-export const Feed = ({
-  data,
-  usersData,
-  deletePost,
-  likePost,
-  unLikePost,
-}: FeedProps) => {
+export const Feed = ({ data, usersData, postActions }) => {
   return (
     <div className="feed posts">
       <h1>Feed</h1>
@@ -92,9 +72,7 @@ export const Feed = ({
                   key={post._id}
                   post={post}
                   currentUser={usersData.current}
-                  deletePost={deletePost}
-                  likePost={likePost}
-                  unLikePost={unLikePost}
+                  postActions={postActions}
                 />
               ))}
             </div>

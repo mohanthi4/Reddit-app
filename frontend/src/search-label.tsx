@@ -11,45 +11,34 @@ import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import InputAdornment from "@mui/material/InputAdornment";
 
-const SearchList = ({
-  searchList,
-  handleSubscribeUser,
-  handleUnSubscribeUser,
-}) => {
+const SearchList = ({ searchList, userActions }) => {
   const handleSubscribe = (e, id) => {
     api.addSubscriber(id);
-    handleSubscribeUser(id);
+    userActions.handleSubscribeUser(id);
   };
 
   const handleUnSubscribe = (e, id) => {
     api.UnSubscriber(id);
-    handleUnSubscribeUser(id);
+    userActions.handleUnSubscribeUser(id);
   };
-
-  console.log("--> ", searchList);
 
   return (
     <ul className="lists">
       {searchList.map((s) => (
         <li key={s.id}>
           <h1>{s.user}</h1>
-          {s.isSubscribe
-            ? (
-              <button
-                className="green"
-                onClick={(e) => handleUnSubscribe(e, s.id)}
-              >
-                Subscribed ✓
-              </button>
-            )
-            : (
-              <button
-                className="blue"
-                onClick={(e) => handleSubscribe(e, s.id)}
-              >
-                Subscribe
-              </button>
-            )}
+          {s.isSubscribe ? (
+            <button
+              className="green"
+              onClick={(e) => handleUnSubscribe(e, s.id)}
+            >
+              Subscribed ✓
+            </button>
+          ) : (
+            <button className="blue" onClick={(e) => handleSubscribe(e, s.id)}>
+              Subscribe
+            </button>
+          )}
         </li>
       ))}
     </ul>
@@ -59,22 +48,13 @@ const SearchList = ({
 const getFilteredUsers = (usersData, value) =>
   value ? usersData.filter((x) => x.user.includes(value)) : [];
 
-export const SearchLabel = ({
-  usersData,
-  handleSubscribeUser,
-  handleUnSubscribeUser,
-}) => {
+export const SearchLabel = ({ usersData, userActions }) => {
   const [inputValue, setInputValue] = useState("");
   const [searchIds, setSearchIds] = useState([]);
 
   const handleSearch = () => {
     const ids = inputValue
-      ? usersData
-        .filter((x) => {
-          console.log(x);
-          return x.user.includes(inputValue);
-        })
-        .map((x) => x.id)
+      ? usersData.filter((x) => x.user.includes(inputValue)).map((x) => x.id)
       : [];
 
     setSearchIds(ids);
@@ -125,11 +105,7 @@ export const SearchLabel = ({
           />
         </Box>
         {filteredUsers.length > 0 && (
-          <SearchList
-            searchList={filteredUsers}
-            handleSubscribeUser={handleSubscribeUser}
-            handleUnSubscribeUser={handleUnSubscribeUser}
-          />
+          <SearchList searchList={filteredUsers} userActions={userActions} />
         )}
       </Toolbar>
     </AppBar>
