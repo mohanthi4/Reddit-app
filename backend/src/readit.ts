@@ -1,4 +1,3 @@
-import { IntegerType } from "mongodb";
 
 export type PostData = {
   _id?: number;
@@ -22,6 +21,7 @@ export default class Readit {
     const content = await this.#posts.find().toArray();
     return content;
   }
+
   async deletePost(id: number) {
     await this.#posts.findOneAndDelete({ _id: id });
     const content = await this.#posts.find().toArray();

@@ -7,6 +7,7 @@ interface PostsSchema {
   date: string;
   title: string;
   description: string;
+  image: string;
   likes: number;
   likedUsers: number[];
 }
