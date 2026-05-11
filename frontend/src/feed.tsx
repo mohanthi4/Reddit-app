@@ -28,6 +28,7 @@ const PostArticle = ({ post, currentUser, postActions }) => {
     date,
     title,
     description,
+    image,
     likes,
     likedUsers,
   } = post;
@@ -40,6 +41,9 @@ const PostArticle = ({ post, currentUser, postActions }) => {
       <div className="PostData">
         <h3>{title}</h3>
         <p>{description}</p>
+        {image && (
+          <img src={image} style={{ height: "200px" }} alt="description" />
+        )}
       </div>
       {currentUser === userId && (
         <button
