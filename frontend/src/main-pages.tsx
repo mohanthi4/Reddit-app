@@ -12,6 +12,8 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
+import Fab from "@mui/material/Fab";
+import AddIcon from "@mui/icons-material/Add";
 
 const useUsers = () => {
   const [usersData, dispatch] = useReducer(subscribersReduce, {
@@ -54,6 +56,7 @@ export const Home = () => {
   const { usersData, userActions } = useUsers();
   const { addMutation, deleteMutation, likeMutation, unlikeMutation } =
     postMutations();
+  const [open, setOpen] = useState(false);
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
     useInfiniteQuery({
@@ -88,19 +91,41 @@ export const Home = () => {
           handleUnSubscribeUser: userActions.unSubscribe,
         }}
       />
-      <FormCreation current={usersData.current} addPost={addMutation} />
-      <Feed
-        data={data}
-        usersData={usersData}
-        postActions={{ deleteMutation, likeMutation, unlikeMutation }}
-      />
-      <div ref={bottomRef} style={{ height: 50 }}>
-        {isFetchingNextPage
-          ? "Loading more..."
-          : hasNextPage
-            ? "Scroll to load more"
-            : "No more posts"}
-      </div>
+
+      <Box sx={{ display: "flex", alignItems: "flex-start" }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center", // vertical center
+            height: "100vh",
+          }}
+        >
+          <Fab color="primary" aria-label="add" onClick={() => setOpen(!open)}>
+            <AddIcon />
+          </Fab>
+        </Box>
+
+        <Box>
+          {open ? (
+            <FormCreation current={usersData.current} addPost={addMutation} />
+          ) : (
+            <>
+              <Feed
+                data={data}
+                usersData={usersData}
+                postActions={{ deleteMutation, likeMutation, unlikeMutation }}
+              />
+              <div ref={bottomRef} style={{ height: 50 }}>
+                {isFetchingNextPage
+                  ? "Loading more..."
+                  : hasNextPage
+                    ? "Scroll to load more"
+                    : "No more posts"}
+              </div>
+            </>
+          )}
+        </Box>
+      </Box>
     </div>
   );
 };

@@ -10,9 +10,10 @@ body {
 }
 
 .posts {
+  width: 70vw;
+  margin: 80px 150px;
   border: 1px solid #777;
   border-radius: 2px;
-  margin: 50px;
   padding: 20px;
 }
 
@@ -43,6 +44,13 @@ body {
 
 .list {
   height: 50px;
+}
+
+.formData{
+  margin: 80px 150px;
+  border: 1px solid #777;
+  border-radius: 2px;
+  padding: 20px;
 }
 
 .search {
@@ -79,6 +87,7 @@ textarea {
 .formData input, textarea, button {
   width: 100%;
   margin: 10px;
+  
 }
 
 .formData button {

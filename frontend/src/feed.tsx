@@ -65,8 +65,9 @@ const PostArticle = ({ post, currentUser, postActions }) => {
 
 export const Feed = ({ data, usersData, postActions }) => {
   return (
-    <div className="feed posts">
+    <div className="posts">
       <h1>Feed</h1>
+
       <div className="feedData">
         {data.pages.length > 0 ? (
           data.pages.map((page, i) => (

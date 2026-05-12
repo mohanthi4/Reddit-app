@@ -3,6 +3,10 @@ import { useContext } from "react";
 import { useEffect, useReducer, useState } from "react";
 import { UserContext } from "./App.tsx";
 import { format } from "date-fns";
+import { styled } from "@mui/material/styles";
+import Button from "@mui/material/Button";
+import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+
 
 type AddPosts = {
   addPost: (content: PostData) => void;
@@ -29,6 +33,18 @@ export const FormCreation = ({ current, addPost }: AddPosts) => {
   const userName = useContext(UserContext);
   const [preview, setPreview] = useState(null);
 
+  const VisuallyHiddenInput = styled("input")({
+    clip: "rect(0 0 0 0)",
+    clipPath: "inset(50%)",
+    height: 1,
+    overflow: "hidden",
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    whiteSpace: "nowrap",
+    width: 1,
+  });
+
   const handleAddPost = (e) => {
     e.preventDefault();
     const posts = getPostInfo(e, userName, current, preview);
@@ -44,7 +60,7 @@ export const FormCreation = ({ current, addPost }: AddPosts) => {
   };
 
   return (
-    <div className="formData posts">
+    <div className="formData ">
       <h1>Create Post</h1>
       <form onSubmit={handleAddPost} className="formData">
         <label>Title</label>
@@ -54,14 +70,28 @@ export const FormCreation = ({ current, addPost }: AddPosts) => {
           name="description"
           placeholder="Write your post..."
         ></textarea>
-        <input type="file" accept="image/*" onChange={handleFileChange} />
-        {preview && (
-          <img
-            src={preview}
-            alt="Preview"
-            style={{ width: "300px", marginTop: "10px", marginLeft: "30px" }}
+        <Button
+          component="label"
+          role={undefined}
+          variant="contained"
+          tabIndex={-1}
+          startIcon={<CloudUploadIcon />}
+        >
+          Upload files
+          <VisuallyHiddenInput
+            type="file"
+            accept="image/*"
+            onChange={handleFileChange}
           />
-        )}
+          {preview && (
+            <img
+              src={preview}
+              alt="Preview"
+              style={{ width: "300px", marginTop: "10px", marginLeft: "30px" }}
+            />
+          )}
+        </Button>
+
         <button>Post</button>
       </form>
     </div>
