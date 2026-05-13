@@ -14,6 +14,7 @@ import {
 } from "@tanstack/react-query";
 import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
+import HomeIcon from "@mui/icons-material/Home";
 
 const useUsers = () => {
   const [usersData, dispatch] = useReducer(subscribersReduce, {
@@ -49,6 +50,49 @@ const postMutations = () => {
   const deleteMutation = usePostMutation(api.deletion);
 
   return { addMutation, deleteMutation, likeMutation, unlikeMutation };
+};
+
+const MainIcons = ({ open, setOpen }) => {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "left",
+        alignItems: "center", // vertical center
+        height: "100vh",
+      }}
+    >
+      <Fab
+        color="primary"
+        aria-label="add"
+        onClick={() => setOpen(false)}
+        sx={{
+          position: "fixed",
+          top: "45%",
+          left: "5%",
+          bgcolor: open ? "white" : "primary.main",
+          color: open ? "primary.main" : "white",
+        }}
+      >
+        <HomeIcon />
+      </Fab>
+      <Fab
+        color="primary"
+        aria-label="home"
+        onClick={() => setOpen(true)}
+        sx={{
+          position: "fixed",
+          top: "55%",
+          left: "5%",
+          transform: "translateY(-50%)",
+          bgcolor: open ? "primary.main" : "white",
+          color: open ? "white" : "primary.main",
+        }}
+      >
+        <AddIcon />
+      </Fab>
+    </Box>
+  );
 };
 
 export const Home = () => {
@@ -93,18 +137,7 @@ export const Home = () => {
       />
 
       <Box sx={{ display: "flex", alignItems: "flex-start" }}>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center", // vertical center
-            height: "100vh",
-          }}
-        >
-          <Fab color="primary" aria-label="add" onClick={() => setOpen(!open)}>
-            <AddIcon />
-          </Fab>
-        </Box>
-
+        <MainIcons open={open} setOpen={setOpen} />
         <Box>
           {open ? (
             <FormCreation current={usersData.current} addPost={addMutation} />
