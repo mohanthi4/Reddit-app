@@ -7,7 +7,6 @@ import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 
-
 type AddPosts = {
   addPost: (content: PostData) => void;
 };
@@ -32,6 +31,8 @@ const getPostInfo = (e, userName, current, preview) => {
 export const FormCreation = ({ current, addPost }: AddPosts) => {
   const userName = useContext(UserContext);
   const [preview, setPreview] = useState(null);
+  const [url, setUrl] = useState("");
+  const [uploading, setUploading] = useState(false);
 
   const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
@@ -47,15 +48,34 @@ export const FormCreation = ({ current, addPost }: AddPosts) => {
 
   const handleAddPost = (e) => {
     e.preventDefault();
-    const posts = getPostInfo(e, userName, current, preview);
+    if (uploading) {
+      alert("Image still uploading...");
+      return;
+    }
+    const posts = getPostInfo(e, userName, current, url);
     const { userId, ...body } = posts;
     addPost.mutate(body);
   };
 
-  const handleFileChange = (e) => {
+  const uploadImage = (e) => {
     const file = e.target.files[0];
     if (file) {
       setPreview(URL.createObjectURL(file));
+      setUploading(true);
+      const data = new FormData();
+      data.append("file", file);
+      data.append("upload_preset", "readit");
+
+      fetch("https://api.cloudinary.com/v1_1/du6mwwqgr/image/upload", {
+        method: "post",
+        body: data,
+      })
+        .then((resp) => resp.json())
+        .then((data) => {
+          setUrl(data.url);
+          setUploading(false);
+        })
+        .catch((err) => console.log(err));
     }
   };
 
@@ -81,17 +101,17 @@ export const FormCreation = ({ current, addPost }: AddPosts) => {
           <VisuallyHiddenInput
             type="file"
             accept="image/*"
-            onChange={handleFileChange}
+            onChange={uploadImage}
           />
-          {preview && (
-            <img
-              src={preview}
-              alt="Preview"
-              style={{ width: "300px", marginTop: "10px", marginLeft: "30px" }}
-            />
-          )}
         </Button>
 
+        {preview && (
+          <img
+            src={preview}
+            alt="Preview"
+            style={{ width: "300px", marginTop: "10px", marginLeft: "30px" }}
+          />
+        )}
         <button>Post</button>
       </form>
     </div>
