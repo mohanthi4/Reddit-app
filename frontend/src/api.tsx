@@ -107,3 +107,17 @@ export const fetchPosts = async ({ pageParam = 0 }) => {
 
   return response;
 };
+
+export const fetchImageUrl = async (data) => {
+  const resp = await fetch(
+    "https://api.cloudinary.com/v1_1/du6mwwqgr/image/upload",
+    {
+      method: "POST",
+      body: data,
+    },
+  );
+
+  const result = await resp.json();
+
+  return result.secure_url.replace("/upload/", "/upload/f_auto,q_auto/");
+};

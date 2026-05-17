@@ -16,7 +16,7 @@ const LikeButton = ({ isLiked, likes, onLike, onUnlike }) => (
     className={`likes ${isLiked ? "like-true" : "unlike"}`}
     onClick={isLiked ? onUnlike : onLike}
   >
-    {likes} Liked
+    ⬆ {likes}
   </button>
 );
 
@@ -45,20 +45,21 @@ const PostArticle = ({ post, currentUser, postActions }) => {
           <img src={image} style={{ height: "200px" }} alt="description" />
         )}
       </div>
-      {currentUser === userId && (
-        <button
-          className="button-action"
-          onClick={() => postActions.deleteMutation.mutate(id)}
-        >
-          Delete
-        </button>
-      )}
+
       <LikeButton
         isLiked={isLiked}
         likes={likes}
         onLike={() => postActions.likeMutation.mutate(id)}
         onUnlike={() => postActions.unlikeMutation.mutate(id)}
       />
+      {currentUser === userId && (
+        <button
+          className="delete"
+          onClick={() => postActions.deleteMutation.mutate(id)}
+        >
+          Delete
+        </button>
+      )}
     </article>
   );
 };

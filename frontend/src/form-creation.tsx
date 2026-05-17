@@ -1,15 +1,21 @@
 import "./form.css";
 import { useContext } from "react";
-import { useEffect, useReducer, useState } from "react";
+import { useEffect, useReducer, useState, useRef } from "react";
 import { UserContext } from "./App.tsx";
 import { format } from "date-fns";
 import { styled } from "@mui/material/styles";
 import Button from "@mui/material/Button";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import * as api from "./api.tsx";
 
 type AddPosts = {
   addPost: (content: PostData) => void;
 };
+
+const TABS = [
+  { id: "text", label: "Text" },
+  { id: "image", label: "Image" },
+];
 
 const getPostInfo = (e, userName, current, preview) => {
   const formData = new FormData(e.target);
@@ -28,23 +34,88 @@ const getPostInfo = (e, userName, current, preview) => {
   };
 };
 
+const getFileInfo = (file) => {
+  const data = new FormData();
+  data.append("file", file);
+  data.append("upload_preset", "readit");
+  return data;
+};
+
+const CreationTags = ({ setActiveTab, activeTab }) => {
+  return (
+    <div className="tabs">
+      {TABS.map((tab) => (
+        <button
+          key={tab.id}
+          onClick={() => setActiveTab(tab.id)}
+          className={`tab ${activeTab === tab.id ? "tabActive" : ""}`}
+        >
+          {tab.label}
+          {activeTab === tab.id && <span className="tabUnderline" />}
+        </button>
+      ))}
+    </div>
+  );
+};
+
+const TextDescription = ({ activeTab }) => {
+  return (
+    <>
+      {activeTab === "text" && (
+        <div className="field">
+          <label htmlFor="description">Description</label>
+          <textarea
+            id="description"
+            name="description"
+            placeholder="Write your post..."
+            rows={5}
+          />
+        </div>
+      )}
+    </>
+  );
+};
+
+const Title = () => {
+  return (
+    <div className="field">
+      <label htmlFor="title">
+        Title <span className="required">*</span>
+      </label>
+      <input
+        id="title"
+        name="title"
+        type="text"
+        placeholder="Enter a title..."
+        required
+      />
+    </div>
+  );
+};
+
 export const FormCreation = ({ current, addPost }: AddPosts) => {
-  const userName = useContext(UserContext);
+  const [activeTab, setActiveTab] = useState("text");
   const [preview, setPreview] = useState(null);
   const [url, setUrl] = useState("");
   const [uploading, setUploading] = useState(false);
+  const fileInputRef = useRef(null);
+  const userName = useContext(UserContext);
 
-  const VisuallyHiddenInput = styled("input")({
-    clip: "rect(0 0 0 0)",
-    clipPath: "inset(50%)",
-    height: 1,
-    overflow: "hidden",
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    whiteSpace: "nowrap",
-    width: 1,
-  });
+  const handleImageChange = async (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setPreview(URL.createObjectURL(file));
+      setUploading(true);
+      try {
+        const url = await api.fetchImageUrl(getFileInfo(file));
+        setUrl(url);
+      } catch (err) {
+        console.log(err);
+      } finally {
+        setUploading(false);
+      }
+    }
+  };
 
   const handleAddPost = (e) => {
     e.preventDefault();
@@ -52,67 +123,55 @@ export const FormCreation = ({ current, addPost }: AddPosts) => {
       alert("Image still uploading...");
       return;
     }
-    const posts = getPostInfo(e, userName, current, url);
-    const { userId, ...body } = posts;
+    const { userId, ...body } = getPostInfo(e, userName, current, url);
     addPost.mutate(body);
-  };
-
-  const uploadImage = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setPreview(URL.createObjectURL(file));
-      setUploading(true);
-      const data = new FormData();
-      data.append("file", file);
-      data.append("upload_preset", "readit");
-
-      fetch("https://api.cloudinary.com/v1_1/du6mwwqgr/image/upload", {
-        method: "post",
-        body: data,
-      })
-        .then((resp) => resp.json())
-        .then((data) => {
-          setUrl(data.url);
-          setUploading(false);
-        })
-        .catch((err) => console.log(err));
-    }
+    alert("your post is uploaded")
   };
 
   return (
     <div className="formData ">
       <h1>Create Post</h1>
-      <form onSubmit={handleAddPost} className="formData">
-        <label>Title</label>
-        <input name="title" type="text" placeholder="Enter a title..." />
-        <label>Body</label>
-        <textarea
-          name="description"
-          placeholder="Write your post..."
-        ></textarea>
-        <Button
-          component="label"
-          role={undefined}
-          variant="contained"
-          tabIndex={-1}
-          startIcon={<CloudUploadIcon />}
-        >
-          Upload files
-          <VisuallyHiddenInput
-            type="file"
-            accept="image/*"
-            onChange={uploadImage}
-          />
-        </Button>
 
-        {preview && (
-          <img
-            src={preview}
-            alt="Preview"
-            style={{ width: "300px", marginTop: "10px", marginLeft: "30px" }}
-          />
+      <CreationTags setActiveTab={setActiveTab} activeTab={activeTab} />
+
+      <form onSubmit={handleAddPost}>
+        <Title />
+        <TextDescription activeTab={activeTab} />
+
+        {activeTab === "image" && (
+          <div className="field">
+            <label>Upload Image</label>
+
+            <div
+              className="dropZone"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              {preview ? (
+                <img src={preview} className="previewImg" />
+              ) : (
+                <span>Click to upload</span>
+              )}
+            </div>
+
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              style={{ display: "none" }}
+            />
+          </div>
         )}
-        <button>Post</button>
+
+        <div>
+          <button
+            type="submit"
+            disabled={uploading}
+            className={`btn ${uploading ? "" : "btnPrimary"}`}
+          >
+            {uploading ? "Loading..." : "Post"}
+          </button>
+        </div>
       </form>
     </div>
   );

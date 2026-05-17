@@ -117,9 +117,18 @@ export const Home = () => {
         }}
       />
 
-      <Box sx={{ display: "flex", alignItems: "flex-start" }}>
-        <MainIcons open={open} setOpen={setOpen} />
-        <Box>
+      <Box sx={{ display: "flex", width: "100%" }}>
+        <Box sx={{ width: 80, flexShrink: 0 }}>
+          <MainIcons open={open} setOpen={setOpen} />
+        </Box>
+        <Box
+          sx={{
+            flex: 1,
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+          }}
+        >
           {open ? (
             <FormCreation current={usersData.current} addPost={addMutation} />
           ) : (
