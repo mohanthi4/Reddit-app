@@ -121,3 +121,17 @@ export const fetchImageUrl = async (data) => {
 
   return result.secure_url.replace("/upload/", "/upload/f_auto,q_auto/");
 };
+
+export const fetchVideoUrl = async (data) => {
+  const resp = await fetch(
+    "https://api.cloudinary.com/v1_1/du6mwwqgr/video/upload",
+    {
+      method: "POST",
+      body: data,
+    },
+  );
+
+  const result = await resp.json();
+
+  return result.secure_url;
+};

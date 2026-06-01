@@ -93,27 +93,53 @@ const Title = () => {
   );
 };
 
+const validateVideoDuration = (file: File): Promise<void> =>
+  new Promise((resolve, reject) => {
+    const video = document.createElement("video");
+    video.preload = "metadata";
+    video.onloadedmetadata = () => {
+      URL.revokeObjectURL(video.src);
+      if (video.duration > 300) {
+        reject(new Error("Video must be 5 minutes or less"));
+      } else {
+        resolve();
+      }
+    };
+    video.src = URL.createObjectURL(file);
+  });
+
 export const FormCreation = ({ current, addPost }: AddPosts) => {
   const [activeTab, setActiveTab] = useState("text");
   const [preview, setPreview] = useState(null);
   const [url, setUrl] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [mediaType, setMediaType] = useState<"image" | "video" | null>(null);
   const fileInputRef = useRef(null);
   const userName = useContext(UserContext);
 
   const handleImageChange = async (e) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setPreview(URL.createObjectURL(file));
-      setUploading(true);
-      try {
-        const url = await api.fetchImageUrl(getFileInfo(file));
-        setUrl(url);
-      } catch (err) {
-        console.log(err);
-      } finally {
-        setUploading(false);
+    if (!file) return;
+    const isVideo = file.type.startsWith("video/");
+    setMediaType(isVideo ? "video" : "image");
+    setPreview(URL.createObjectURL(file));
+    setUploading(true);
+    try {
+      if (isVideo) {
+        await validateVideoDuration(file);
+        const uploadedUrl = await api.fetchVideoUrl(getFileInfo(file));
+        setUrl(uploadedUrl);
+      } else {
+        const uploadedUrl = await api.fetchImageUrl(getFileInfo(file));
+        setUrl(uploadedUrl);
       }
+    } catch (err) {
+      alert(err.message || "Upload failed");
+      setPreview(null);
+      setUrl("");
+      setMediaType(null);
+    } finally {
+      setUploading(false);
     }
   };
 
@@ -147,7 +173,11 @@ export const FormCreation = ({ current, addPost }: AddPosts) => {
               onClick={() => fileInputRef.current?.click()}
             >
               {preview ? (
-                <img src={preview} className="previewImg" />
+                mediaType === "video" ? (
+                  <video src={preview} className="previewImg" controls />
+                ) : (
+                  <img src={preview} className="previewImg" />
+                )
               ) : (
                 <span>Click to upload</span>
               )}
@@ -156,7 +186,7 @@ export const FormCreation = ({ current, addPost }: AddPosts) => {
             <input
               ref={fileInputRef}
               type="file"
-              accept="image/*"
+              accept="image/*,video/*"
               onChange={handleImageChange}
               style={{ display: "none" }}
             />

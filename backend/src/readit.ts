@@ -1,4 +1,3 @@
-
 export type PostData = {
   _id?: number;
   user: string;

@@ -17,7 +17,10 @@ export const serveFeedInfo: honoHandler = async (c) => {
     return c.json({ posts: [], nextId: 1 });
   }
   const { cursor, limit } = await c.req.json();
-  const { posts, nextCursor } = await readit.getAllPosts(cursor, limit);
+  const { posts, nextCursor } = await readit.getAllPosts(
+    parseInt(cursor),
+    parseInt(limit),
+  );
   return c.json({ posts: posts, nextCursor });
 };
 

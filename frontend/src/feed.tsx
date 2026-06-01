@@ -42,7 +42,11 @@ const PostArticle = ({ post, currentUser, postActions }) => {
         <h3>{title}</h3>
         <p>{description}</p>
         {image && (
-          <img src={image} style={{ height: "200px" }} alt="description" />
+          image.includes("/video/upload/") ? (
+            <video src={image} style={{ height: "200px" }} controls />
+          ) : (
+            <img src={image} style={{ height: "200px" }} alt="description" />
+          )
         )}
       </div>
 
@@ -72,7 +76,7 @@ export const Feed = ({ data, usersData, postActions }) => {
       <div className="feedData">
         {data.pages.length > 0 ? (
           data.pages.map((page, i) => (
-            <div key={i}>
+            <div key={page.nextCursor}>
               {page.posts.map((post) => (
                 <PostArticle
                   key={post._id}
