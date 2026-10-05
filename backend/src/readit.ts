@@ -6,7 +6,7 @@ export type PostData = {
   description: string | undefined;
 };
 
-export default class Readit {
+export default class Reddit {
   #nextId;
   #posts;
   constructor(posts, nextId = 1) {
